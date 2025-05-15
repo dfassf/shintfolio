@@ -238,12 +238,12 @@
         <section id="portfolio">
             <div class="container">
                 <h2 class="section-title">포트폴리오</h2>
-                <p class="section-subtitle">다양한 서비스를 개발했어요</p>
+                <p class="section-subtitle">다양한 서비스를 개발했어요. 스크린샷을 클릭하면 확대해서 볼 수 있어요.</p>
                 
                 <!-- 스타일 1: 개선된 쇼케이스 -->
                 <div class="portfolio-item">
                     <div class="portfolio-header">
-                        <h3 class="portfolio-title">병원관리자 대시보드</h3>
+                        <h3 class="portfolio-title">병원관리자 웹페이지</h3>
                         <span class="company-tag">서티라이프</span>
                     </div>
                     
@@ -265,9 +265,7 @@
                             <div class="tech-stack">
                                 <h4>사용 기술</h4>
                                 <div class="tech-tags">
-                                    <span class="tech-tag">Vue 3.0</span>
-                                    <span class="tech-tag">TypeScript</span>
-                                    <span class="tech-tag">SCSS</span>
+                                    <span class="tech-tag">Vue.js</span>
                                     <span class="tech-tag">NestJS</span>
                                     <span class="tech-tag">MongoDB</span>
                                 </div>
@@ -339,11 +337,9 @@
                             <div class="tech-stack">
                                 <h4>사용 기술</h4>
                                 <div class="tech-tags">
-                                    <span class="tech-tag">Vue 3.0</span>
-                                    <span class="tech-tag">TypeScript</span>
+                                    <span class="tech-tag">Vue.js</span>
                                     <span class="tech-tag">NestJS</span>
                                     <span class="tech-tag">MongoDB</span>
-                                    <span class="tech-tag">Azure Functions</span>
                                 </div>
                             </div>
                         </div>
@@ -396,8 +392,7 @@
                             <div class="tech-stack">
                                 <h4>사용 기술</h4>
                                 <div class="tech-tags">
-                                    <span class="tech-tag">Vue 3.0</span>
-                                    <span class="tech-tag">JavaScript</span>
+                                    <span class="tech-tag">Vue.js</span>
                                     <span class="tech-tag">Kakao SDK</span>
                                 </div>
                             </div>
@@ -440,8 +435,7 @@
                             <div class="tech-stack">
                                 <h4>사용 기술</h4>
                                 <div class="tech-tags">
-                                    <span class="tech-tag">Vue 3.0</span>
-                                    <span class="tech-tag">TypeScript</span>
+                                    <span class="tech-tag">Vue.js</span>
                                     <span class="tech-tag">NestJS</span>
                                     <span class="tech-tag">Kakao SDK</span>
                                 </div>
@@ -678,6 +672,7 @@
                             <div class="edu-school">한국외국어대학교</div>
                             <div class="edu-period">2009.03 - 2018.02</div>
                             <div class="edu-major">스칸디나비아어 전공</div>
+                            <div class="edu-major">경제학 부전공</div>
                         </div>
                     </div>
                     
@@ -729,6 +724,14 @@
                 </div>
             </div>
         </section>
+
+        <!-- 이미지 모달 -->
+        <div class="image-modal" v-if="isModalVisible" @click="closeModal">
+            <div class="modal-content" @click.stop>
+                <img :src="modalImage" alt="확대된 이미지" class="modal-image">
+                <button class="modal-close" @click="closeModal">&times;</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -736,14 +739,33 @@
         const app = new Vue({
             el: '#app',
             data: {
-                // 데이터는 여기에 추가
+                isModalVisible: false,
+                modalImage: ''
             },
             methods: {
-                // 메소드는 여기에 추가
+                openModal(imageSrc) {
+                    this.modalImage = imageSrc;
+                    this.isModalVisible = true;
+                    document.body.style.overflow = 'hidden'; // 모달 열릴 때 스크롤 방지
+                },
+                closeModal() {
+                    this.isModalVisible = false;
+                    document.body.style.overflow = ''; // 모달 닫힐 때 스크롤 복원
+                }
             },
             mounted() {
-                // 컴포넌트가 마운트되면 실행
                 console.log('Vue 인스턴스가 생성되었습니다.');
+                
+                // 모든 갤러리 이미지에 클릭 이벤트 추가
+                this.$nextTick(() => {
+                    const galleryImages = document.querySelectorAll('.gallery-img');
+                    galleryImages.forEach(img => {
+                        img.addEventListener('click', () => {
+                            this.openModal(img.src);
+                        });
+                        img.style.cursor = 'pointer'; // 포인터 커서 스타일 추가
+                    });
+                });
             }
         });
     </script>
