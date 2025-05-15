@@ -210,6 +210,10 @@ section {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
+.skill-card p {
+    text-decoration: underline;
+}
+
 .skill-name {
     font-size: 18px;
     font-weight: 600;
