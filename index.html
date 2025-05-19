@@ -10,11 +10,90 @@
     <!-- Vue CDN 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script> -->
+    
+    <!-- 스크롤 효과를 위한 라이브러리 추가 -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    
+    <style>
+        /* 스크롤 프로그레스 바 스타일 */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+        }
+        .progress-bar {
+            height: 4px;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        /* 헤더 스크롤 효과 */
+        header {
+            transition: all 0.3s ease;
+        }
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        
+        /* 패럴랙스 효과 */
+        .hero {
+            position: relative;
+            overflow: hidden;
+        }
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            z-index: -1;
+            transform: translateZ(0);
+        }
+        
+        /* 타이핑 효과 */
+        .typing::after {
+            content: "|";
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* AOS 애니메이션 클래스 */
+        [data-aos] {
+            opacity: 0;
+            transition-property: opacity, transform;
+        }
+        [data-aos].aos-animate {
+            opacity: 1;
+        }
+        [data-aos="fade-up"] {
+            transform: translateY(20px);
+        }
+        [data-aos="fade-up"].aos-animate {
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
+    <!-- 스크롤 프로그레스 바 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
     <div id="app">
         <!-- 헤더 -->
-        <header>
+        <header :class="{ 'scrolled': scrolled }">
             <div class="container">
                 <div class="header-content">
                     <div class="logo">엄신우</div>
@@ -34,17 +113,18 @@
 
         <!-- 히어로 섹션 -->
         <section class="hero">
+            <div class="parallax-bg" ref="parallaxBg"></div>
             <div class="container">
-                <div class="hero-content">
+                <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
                     <div class="hero-tag">백엔드 개발자</div>
-                    <h1>초기 설계부터 운영까지 경험한 <br>4년차 Node.js 백엔드 개발자</h1>
-                    <p class="hero-description">
+                    <h1>초기 설계부터 운영까지 경험한 <br><span class="typing" ref="typing">4년차 Node.js 백엔드 개발자</span></h1>
+                    <p class="hero-description" data-aos="fade-up" data-aos-delay="200">
                         <span>4년차 백엔드 중심의 풀스택 개발자로, NestJS 기반의 서버 아키텍처 설계와 도메인 모델링에 강점을 가지고 있습니다.</span>
                         <span>인증서 발행량 30만건, 카카오톡 채널 친구 1만 5천명에 달하는 서비스의 초기 개발부터 운영, 리팩토링, 마이그레이션까지 전 주기 경험을 보유하고 있으며, 기술 부채 해소와 구조적 개선을 통해 시스템 안정성과 비용 효율을 실질적으로 개선한 경험이 있습니다.</span>
                         <span>도메인 요구사항을 빠르게 파악하고, 기획자 및 외부 서비스 담당자와의 긴밀한 협업을 통해 문제를 구체화하고 해결해나가는 데 익숙합니다.</span>
                         <span>유지보수성과 생산성을 동시에 고려한 설계와 구현, 그리고 사용자 경험까지 아우르는 사고로 팀과 서비스에 기여해왔습니다.</span>
                     </p>
-                    <a href="#contact" class="btn">
+                    <a href="#contact" class="btn" data-aos="fade-up" data-aos-delay="400">
                         연락하기
                         <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8 3L14 8L8 13M14 8H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -57,10 +137,10 @@
         <!-- 소개 섹션 -->
         <section id="about">
             <div class="container">
-                <h2 class="section-title">소개</h2>
-                <p class="section-subtitle">백엔드 개발에 풀스택 경험을 활용해요.</p>
+                <h2 class="section-title" data-aos="fade-up">소개</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">백엔드 개발에 풀스택 경험을 활용해요.</p>
                 
-                <div class="about-content">
+                <div class="about-content" data-aos="fade-up" data-aos-delay="200">
                     <p>프론트엔드 중심 풀스택 개발자로 커리어를 시작했지만 
                         서티라이프에서 백엔드 설계 및 개발을 담당하게 되며 백엔드에 더 큰 전문성을 가지게 되었습니다. 
                         약 2년간 의료 인증서 발행 서비스의 초기 개발부터 참여하여 30만 건 이상의 인증서 발행과 1만 5천 명 이상의 카카오 로그인 회원을 보유한 
@@ -76,11 +156,11 @@
         <!-- 경력 섹션 -->
         <section id="experience">
             <div class="container">
-                <h2 class="section-title">경력</h2>
-                <p class="section-subtitle">실무에서의 역할과 문제 해결 경험을 소개해요.</p>
+                <h2 class="section-title" data-aos="fade-up">경력</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">실무에서의 역할과 문제 해결 경험을 소개해요.</p>
                 
                 <div class="exp-list">
-                    <div class="exp-card">
+                    <div class="exp-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="exp-header">
                             <div class="exp-logo"><img src="assets/company_logos/certilife.webp" alt="서티라이프"></div>
                             <div>
@@ -159,7 +239,7 @@
                         </ul>
                     </div>
                     
-                    <div class="exp-card">
+                    <div class="exp-card" data-aos="fade-up" data-aos-delay="300">
                         <div class="exp-header">
                             <div class="exp-logo"><img src="assets/company_logos/musit.webp" alt="뮤짓"></div>
                             <div>
@@ -237,11 +317,11 @@
         <!-- 포트폴리오 섹션 -->
         <section id="portfolio">
             <div class="container">
-                <h2 class="section-title">포트폴리오</h2>
-                <p class="section-subtitle">다양한 서비스를 개발했어요. 스크린샷을 클릭하면 확대해서 볼 수 있어요.</p>
+                <h2 class="section-title" data-aos="fade-up">포트폴리오</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">다양한 서비스를 개발했어요. 스크린샷을 클릭하면 확대해서 볼 수 있어요.</p>
                 
                 <!-- 스타일 1: 개선된 쇼케이스 -->
-                <div class="portfolio-item">
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="200">
                     <div class="portfolio-header">
                         <h3 class="portfolio-title">병원관리자 웹페이지</h3>
                         <span class="company-tag">서티라이프</span>
@@ -315,7 +395,7 @@
                 </div>
                 
                 <!-- 추가 프로젝트: 제조사 관리자 -->
-                <div class="portfolio-item">
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="300">
                     <div class="portfolio-header">
                         <h3 class="portfolio-title">제조사 관리자 웹페이지</h3>
                         <span class="company-tag">서티라이프</span>
@@ -372,7 +452,7 @@
                 </div>
                 
                 <!-- 추가 프로젝트: 인증서 수신화면 -->
-                <div class="portfolio-item">
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="400">
                     <div class="portfolio-header">
                         <h3 class="portfolio-title">인증서 수신화면 페이지</h3>
                         <span class="company-tag">서티라이프</span>
@@ -414,7 +494,7 @@
                 </div>
                 
                 <!-- 추가 프로젝트: 환자용 웹페이지 -->
-                <div class="portfolio-item">
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="500">
                     <div class="portfolio-header">
                         <h3 class="portfolio-title">환자용 웹페이지</h3>
                         <span class="company-tag">서티라이프</span>
@@ -461,7 +541,7 @@
                 </div>
                 
                 <!-- 프로젝트: 밀림엑스 웹앱 -->
-                <div class="portfolio-item">
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="600">
                     <div class="portfolio-header">
                         <h3 class="portfolio-title">Millim:x Web</h3>
                         <span class="company-tag">뮤짓</span>
@@ -536,7 +616,7 @@
                 </div>
                 
                 <!-- 프로젝트: 밀림엑스 앱 -->
-                <div class="portfolio-item">
+                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="700">
                     <div class="portfolio-header">
                         <h3 class="portfolio-title">Millim:x App</h3>
                         <span class="company-tag">뮤짓</span>
@@ -618,11 +698,11 @@
         <!-- 기술 스택 섹션 -->
         <section id="skills">
             <div class="container">
-                <h2 class="section-title">기술 스택</h2>
-                <p class="section-subtitle">실무에서 사용한 기술과 툴을 소개합니다.</p>
+                <h2 class="section-title" data-aos="fade-up">기술 스택</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">실무에서 사용한 기술과 툴을 소개합니다.</p>
                 
                 <div class="skill-grid">
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="skill-name">백엔드 기술</div>
                         <ul class="skill-list">
                             <li class="skill-item"><span class="skill-dot"></span>Node.js / TypeScript</li>
@@ -631,7 +711,7 @@
                         </ul>
                     </div>
                     
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
                         <div class="skill-name">데이터베이스</div>
                         <ul class="skill-list">
                             <li class="skill-item"><span class="skill-dot"></span>MongoDB / Mongoose</li>
@@ -640,7 +720,7 @@
                         </ul>
                     </div>
                     
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="skill-name">인프라 및 클라우드</div>
                         <ul class="skill-list">
                             <li class="skill-item"><span class="skill-dot"></span>Azure</li>
@@ -649,7 +729,7 @@
                         </ul>
                     </div>
                     
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="250">
                         <div class="skill-name">프론트엔드 및 기타</div>
                         <ul class="skill-list">
                             <li class="skill-item"><span class="skill-dot"></span>Vue.js</li>
@@ -664,9 +744,9 @@
         <!-- 학력 및 자격증 섹션 -->
         <section id="education">
             <div class="container">
-                <h2 class="section-title">학력 및 자격증</h2>           
+                <h2 class="section-title" data-aos="fade-up">학력 및 자격증</h2>           
                 <div class="skill-grid">
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="skill-name">학력</div>
                         <div class="edu-item">
                             <div class="edu-school">한국외국어대학교</div>
@@ -676,7 +756,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
                         <div class="skill-name">교육 과정</div>
                         <div class="edu-item">
                             <div class="edu-school">경일게임아카데미</div>
@@ -686,7 +766,7 @@
                         </div>
                     </div>
                     
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="skill-name">자격증</div>
                         <div class="cert-item">
                             <div class="cert-name">정보처리기사</div>
@@ -704,26 +784,25 @@
         <!-- 연락처 섹션 -->
         <section id="contact">
             <div class="container">
-                <h2 class="section-title">연락처</h2>
-                <p class="section-subtitle">언제든지 연락주세요.</p>
+                <h2 class="section-title" data-aos="fade-up">연락처</h2>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">언제든지 연락주세요.</p>
                 <div class="skill-grid">
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="skill-name">이메일</div>
                         <p><a href="mailto:dfassf@naver.com" class="contact-link">dfassf@naver.com</a></p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
                         <div class="skill-name">연락처</div>
                         <p><a href="tel:+821041409225" class="contact-link">010-4140-9225</a></p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="skill-name">GitHub</div>
                         <p><a href="https://github.com/dfassf" target="_blank" class="contact-link">https://github.com/dfassf</a></p>
                     </div>
-                    <div class="skill-card">
+                    <div class="skill-card" data-aos="fade-up" data-aos-delay="250">
                         <div class="skill-name">Notion</div>
                         <p><a href="https://gainful-tarn-9ef.notion.site/962545f9df544085a62a17f4056197da" target="_blank" class="contact-link">Link</a></p>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -743,7 +822,11 @@
             el: '#app',
             data: {
                 isModalVisible: false,
-                modalImage: ''
+                modalImage: '',
+                scrolled: false,
+                typingText: '4년차 Node.js 백엔드 개발자',
+                typingIndex: 0,
+                isTyping: false
             },
             methods: {
                 openModal(imageSrc) {
@@ -754,10 +837,145 @@
                 closeModal() {
                     this.isModalVisible = false;
                     document.body.style.overflow = ''; // 모달 닫힐 때 스크롤 복원
+                },
+                handleScroll() {
+                    // 헤더 스타일 변경
+                    this.scrolled = window.scrollY > 50;
+                    
+                    // 스크롤 프로그레스 바
+                    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const scrolled = (scrollTop / scrollHeight) * 100;
+                    document.getElementById('progressBar').style.width = scrolled + '%';
+                },
+                parallaxEffect() {
+                    if (this.$refs.parallaxBg) {
+                        const scrollPos = window.scrollY;
+                        const translateY = scrollPos * 0.3;
+                        this.$refs.parallaxBg.style.transform = `translateY(${translateY}px)`;
+                    }
+                },
+                startTyping() {
+                    // 타이핑 효과
+                    if (this.$refs.typing) {
+                        this.isTyping = true;
+                        const text = this.typingText;
+                        this.$refs.typing.textContent = '';
+                        
+                        const typeText = () => {
+                            if (this.typingIndex < text.length) {
+                                this.$refs.typing.textContent += text.charAt(this.typingIndex);
+                                this.typingIndex++;
+                                setTimeout(typeText, 100);
+                            } else {
+                                this.isTyping = false;
+                            }
+                        };
+                        
+                        setTimeout(typeText, 500);
+                    }
+                },
+                initAnimations() {
+                    // 다른 섹션들에 애니메이션 다시 적용
+                    const addAnimationToSection = (sectionId, delay = 0) => {
+                        // if (sectionId === 'experience') return; // 경력 섹션은 제외
+                        
+                        const section = document.getElementById(sectionId);
+                        if (!section) return;
+                        
+                        // 섹션 제목에 애니메이션 추가
+                        const title = section.querySelector('.section-title');
+                        if (title) {
+                            title.setAttribute('data-aos', 'fade-up');
+                        }
+                        
+                        // 섹션 서브타이틀에 애니메이션 추가
+                        const subtitle = section.querySelector('.section-subtitle');
+                        if (subtitle) {
+                            subtitle.setAttribute('data-aos', 'fade-up');
+                            subtitle.setAttribute('data-aos-delay', '100');
+                        }
+                        
+                        // 콘텐츠에 애니메이션 추가
+                        if (sectionId === 'about') {
+                            const content = section.querySelector('.about-content');
+                            if (content) {
+                                content.setAttribute('data-aos', 'fade-up');
+                                content.setAttribute('data-aos-delay', '200');
+                            }
+                        }
+                        
+                        // 경력 섹션 애니메이션 추가
+                        if (sectionId === 'experience') {
+                            const expCards = section.querySelectorAll('.exp-card');
+                            expCards.forEach((card, index) => {
+                                card.setAttribute('data-aos', 'fade-up');
+                                card.setAttribute('data-aos-delay', `${200 + index * 100}`);
+                            });
+                        }
+                        
+                        // 포트폴리오 아이템에 애니메이션 추가
+                        if (sectionId === 'portfolio') {
+                            const items = section.querySelectorAll('.portfolio-item');
+                            items.forEach((item, index) => {
+                                item.setAttribute('data-aos', 'fade-up');
+                                item.setAttribute('data-aos-delay', `${200 + index * 100}`);
+                            });
+                        }
+                        
+                        // 스킬 카드에 애니메이션 추가
+                        if (sectionId === 'skills' || sectionId === 'education' || sectionId === 'contact') {
+                            const items = section.querySelectorAll('.skill-card');
+                            items.forEach((item, index) => {
+                                item.setAttribute('data-aos', 'fade-up');
+                                item.setAttribute('data-aos-delay', `${100 + index * 50}`);
+                            });
+                        }
+                    };
+                    
+                    // 각 섹션에 애니메이션 적용
+                    ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'].forEach(addAnimationToSection);
+                    
+                    // 히어로 섹션 애니메이션
+                    const heroContent = document.querySelector('.hero-content');
+                    if (heroContent) {
+                        heroContent.setAttribute('data-aos', 'fade-up');
+                        heroContent.setAttribute('data-aos-duration', '1000');
+                    }
+                    
+                    const heroDesc = document.querySelector('.hero-description');
+                    if (heroDesc) {
+                        heroDesc.setAttribute('data-aos', 'fade-up');
+                        heroDesc.setAttribute('data-aos-delay', '200');
+                    }
+                    
+                    const heroBtn = document.querySelector('.hero .btn');
+                    if (heroBtn) {
+                        heroBtn.setAttribute('data-aos', 'fade-up');
+                        heroBtn.setAttribute('data-aos-delay', '400');
+                    }
                 }
             },
             mounted() {
                 console.log('Vue 인스턴스가 생성되었습니다.');
+                
+                // 애니메이션 초기화
+                this.initAnimations();
+                
+                // AOS 초기화 (경력 섹션에서는 애니메이션 사용 안함)
+                // AOS 초기화 (모든 섹션에 애니메이션 적용)
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true
+                });
+                
+                // 스크롤 이벤트 리스너
+                window.addEventListener('scroll', this.handleScroll);
+                window.addEventListener('scroll', this.parallaxEffect);
+                
+                // 타이핑 효과
+                this.startTyping();
                 
                 // 모든 갤러리 이미지에 클릭 이벤트 추가
                 this.$nextTick(() => {
@@ -769,6 +987,11 @@
                         img.style.cursor = 'pointer'; // 포인터 커서 스타일 추가
                     });
                 });
+            },
+            beforeDestroy() {
+                // 이벤트 리스너 제거
+                window.removeEventListener('scroll', this.handleScroll);
+                window.removeEventListener('scroll', this.parallaxEffect);
             }
         });
     </script>
