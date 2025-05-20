@@ -16,6 +16,7 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollToPlugin.min.js"></script>
     
     <style>
         /* 스크롤 프로그레스 바 스타일 */
@@ -83,6 +84,139 @@
         [data-aos="fade-up"].aos-animate {
             transform: translateY(0);
         }
+        
+        /* 연락하기 버튼 효과 */
+        .hero .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+            cursor: pointer;
+        }
+        
+        .hero .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), #8A63F5);
+            z-index: -1;
+            transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+            transform: scaleX(0);
+            transform-origin: 0 50%;
+        }
+        
+        .hero .btn:hover:before {
+            transform: scaleX(1);
+        }
+        
+        .hero .btn:hover {
+            box-shadow: 0 6px 20px rgba(99, 72, 239, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .hero .btn .btn-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .hero .btn:hover .btn-icon {
+            transform: translateX(4px);
+        }
+        
+        /* 버튼 클릭 확장 효과 */
+        .expanding-circle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.9) 0%, rgba(0, 102, 255, 0.7) 70%, rgba(0, 102, 255, 0.5) 100%);
+            box-shadow: 0 0 30px rgba(0, 102, 255, 0.6);
+            z-index: 999;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+            backdrop-filter: blur(2px);
+        }
+        
+        /* 최상단 이동 버튼 */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 99;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+            /* 내부 콘텐츠가 항상 정중앙에 오도록 설정 */
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .scroll-top-btn:hover {
+            color: white;
+            background-color: var(--primary);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 102, 255, 0.25);
+        }
+        
+        .scroll-top-btn svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            transition: all 0.2s ease;
+        }
+        
+        /* 호버 시에도 아이콘 위치 유지 */
+        .scroll-top-btn:hover svg {
+            transform: translate(-50%, -50%);
+        }
+        
+        @media (max-width: 768px) {
+            .scroll-top-btn {
+                width: 42px;
+                height: 42px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--black);
+            transition: color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .logo:hover {
+            color: var(--primary);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -93,18 +227,18 @@
     
     <div id="app">
         <!-- 헤더 -->
-        <header :class="{ 'scrolled': scrolled }">
+        <header :class="{ 'scrolled': headerScrolled }">
             <div class="container">
                 <div class="header-content">
-                    <div class="logo">엄신우</div>
+                    <div class="logo" @click="scrollToTop" style="cursor: pointer;">엄신우</div>
                     <nav class="header-nav">
                         <ul>
-                            <li><a href="#about">소개</a></li>
-                            <li><a href="#experience">경력</a></li>
-                            <li><a href="#portfolio">포트폴리오</a></li>
-                            <li><a href="#skills">기술 스택</a></li>
-                            <li><a href="#education">학력</a></li>
-                            <li><a href="#contact">연락처</a></li>
+                            <li><a href="#about" @click.prevent="scrollToSection('about')">소개</a></li>
+                            <li><a href="#experience" @click.prevent="scrollToSection('experience')">경력</a></li>
+                            <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')">포트폴리오</a></li>
+                            <li><a href="#skills" @click.prevent="scrollToSection('skills')">기술 스택</a></li>
+                            <li><a href="#education" @click.prevent="scrollToSection('education')">학력</a></li>
+                            <li><a href="#contact" @click.prevent="scrollToSection('contact')">연락처</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -124,7 +258,7 @@
                         <span>도메인 요구사항을 빠르게 파악하고, 기획자 및 외부 서비스 담당자와의 긴밀한 협업을 통해 문제를 구체화하고 해결해나가는 데 익숙합니다.</span>
                         <span>유지보수성과 생산성을 동시에 고려한 설계와 구현, 그리고 사용자 경험까지 아우르는 사고로 팀과 서비스에 기여해왔습니다.</span>
                     </p>
-                    <a href="#contact" class="btn" data-aos="fade-up" data-aos-delay="400">
+                    <a href="#contact" class="btn" data-aos="fade-up" data-aos-delay="400" @click.prevent="contactButtonEffect">
                         연락하기
                         <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8 3L14 8L8 13M14 8H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -814,6 +948,14 @@
                 <button class="modal-close" @click="closeModal">&times;</button>
             </div>
         </div>
+        
+        <!-- 최상단 이동 버튼 -->
+        <div class="scroll-top-btn" :class="{ 'visible': scrolled }" @click="scrollToTop">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.3"/>
+                <path d="M8 14L12 10L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
     </div>
 
     <script>
@@ -824,6 +966,7 @@
                 isModalVisible: false,
                 modalImage: '',
                 scrolled: false,
+                headerScrolled: false,
                 typingText: '4년차 Node.js 백엔드 개발자',
                 typingIndex: 0,
                 isTyping: false
@@ -838,15 +981,153 @@
                     this.isModalVisible = false;
                     document.body.style.overflow = ''; // 모달 닫힐 때 스크롤 복원
                 },
+                contactButtonEffect(event) {
+                    // 클릭 위치 기반 파티클 효과
+                    const btn = event.currentTarget;
+                    const btnRect = btn.getBoundingClientRect();
+                    const x = event.clientX - btnRect.left;
+                    const y = event.clientY - btnRect.top;
+                    
+                    // 파티클 컨테이너 생성
+                    const particlesContainer = document.createElement('div');
+                    particlesContainer.className = 'particles-container';
+                    particlesContainer.style.position = 'absolute';
+                    particlesContainer.style.left = '0';
+                    particlesContainer.style.top = '0';
+                    particlesContainer.style.width = '100%';
+                    particlesContainer.style.height = '100%';
+                    particlesContainer.style.overflow = 'hidden';
+                    particlesContainer.style.pointerEvents = 'none';
+                    btn.appendChild(particlesContainer);
+                    
+                    // 파티클 생성
+                    const particleCount = 30;
+                    const colors = ['#0066FF', '#3388FF', '#66AAFF', '#99CCFF', '#CCEEFF'];
+                    
+                    for (let i = 0; i < particleCount; i++) {
+                        const particle = document.createElement('div');
+                        const size = Math.random() * 8 + 4;
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 60 + 40;
+                        const distance = Math.random() * 60 + 60;
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        particle.style.position = 'absolute';
+                        particle.style.width = `${size}px`;
+                        particle.style.height = `${size}px`;
+                        particle.style.borderRadius = '50%';
+                        particle.style.backgroundColor = color;
+                        particle.style.left = `${x}px`;
+                        particle.style.top = `${y}px`;
+                        particle.style.pointerEvents = 'none';
+                        particle.style.opacity = '1';
+                        particlesContainer.appendChild(particle);
+                        
+                        gsap.to(particle, {
+                            x: Math.cos(angle) * distance,
+                            y: Math.sin(angle) * distance,
+                            opacity: 0,
+                            duration: 0.8 + Math.random() * 0.6,
+                            ease: 'power2.out',
+                            onComplete: () => {
+                                particle.remove();
+                            }
+                        });
+                    }
+                    
+                    // 확장 원 효과 생성
+                    const circle = document.createElement('div');
+                    circle.className = 'expanding-circle';
+                    document.body.appendChild(circle);
+                    
+                    // 원의 위치를 클릭 위치로 설정
+                    circle.style.top = `${event.clientY}px`;
+                    circle.style.left = `${event.clientX}px`;
+                    
+                    // 원이 화면을 커버하기 위해 필요한 스케일 계산
+                    const maxDim = Math.max(window.innerWidth, window.innerHeight);
+                    const scale = maxDim * 2.5 / 100;
+                    
+                    // 버튼 확대 효과
+                    gsap.to(btn, {
+                        scale: 1.2, 
+                        duration: 0.3, 
+                        ease: 'power1.out'
+                    });
+                    
+                    const contactSection = document.getElementById('contact');
+                    
+                    // 원 확장 애니메이션
+                    gsap.to(circle, {
+                        scale: scale,
+                        opacity: 1,
+                        duration: 0.4, // 확장 시간 단축
+                        ease: 'power2.inOut',
+                        onComplete: () => {
+                            // 원이 완전히 확장되면 부드럽게 연락처 섹션으로 이동
+                            if (contactSection) {
+                                // 스크롤 애니메이션 없이 바로 이동
+                                const sectionTop = contactSection.getBoundingClientRect().top + window.scrollY - 80;
+                                window.scrollTo({
+                                    top: sectionTop,
+                                    behavior: 'auto' // smooth 대신 auto 사용
+                                });
+                                
+                                // 카드 애니메이션 효과 준비
+                                const cards = contactSection.querySelectorAll('.skill-card');
+                                cards.forEach((card) => {
+                                    card.style.opacity = '0';
+                                    card.style.transform = 'translateY(40px) scale(0.9)';
+                                });
+                                
+                                // 약간의 지연 후 페이드아웃 시작
+                                setTimeout(() => {
+                                    // 원 페이드아웃
+                                    gsap.to(circle, {
+                                        opacity: 0,
+                                        duration: 0.8,
+                                        ease: 'power1.inOut',
+                                        onComplete: () => {
+                                            circle.remove();
+                                        }
+                                    });
+                                    
+                                    // 연락처 섹션 카드 애니메이션
+                                    cards.forEach((card, index) => {
+                                        gsap.to(card, {
+                                            y: 0, 
+                                            opacity: 1, 
+                                            scale: 1,
+                                            duration: 0.7,
+                                            ease: 'back.out(1.7)',
+                                            delay: 0.1 * index
+                                        });
+                                    });
+                                }, 100);
+                            }
+                        }
+                    });
+                    
+                    // 파티클 컨테이너 제거
+                    setTimeout(() => {
+                        particlesContainer.remove();
+                    }, 1500);
+                },
                 handleScroll() {
-                    // 헤더 스타일 변경
-                    this.scrolled = window.scrollY > 50;
+                    // 헤더와 최상단 이동 버튼 가시성 설정
+                    const scrollY = window.scrollY;
+                    const headerThreshold = 50;
+                    const btnThreshold = 200;
+                    
+                    // 헤더 스타일과 최상단 이동 버튼 업데이트
+                    this.headerScrolled = scrollY > headerThreshold;
+                    this.scrolled = scrollY > btnThreshold;
                     
                     // 스크롤 프로그레스 바
                     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                     const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                    const scrolled = (scrollTop / scrollHeight) * 100;
-                    document.getElementById('progressBar').style.width = scrolled + '%';
+                    const scrolledPercent = (scrollTop / scrollHeight) * 100;
+                    document.getElementById('progressBar').style.width = scrolledPercent + '%';
                 },
                 parallaxEffect() {
                     if (this.$refs.parallaxBg) {
@@ -953,6 +1234,19 @@
                     if (heroBtn) {
                         heroBtn.setAttribute('data-aos', 'fade-up');
                         heroBtn.setAttribute('data-aos-delay', '400');
+                    }
+                },
+                scrollToTop() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+                scrollToSection(sectionId, offset = 80) {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        const sectionTop = section.getBoundingClientRect().top + window.scrollY - offset;
+                        window.scrollTo({
+                            top: sectionTop,
+                            behavior: 'smooth'
+                        });
                     }
                 }
             },
