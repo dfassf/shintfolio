@@ -745,7 +745,7 @@
         <!-- 이미지 모달 -->
         <div class="image-modal" v-if="isModalVisible" @click="closeModal">
             <div class="modal-content" @click.stop>
-                <img :src="modalImage" alt="확대된 이미지" class="modal-image">
+                <img :src="modalImage" alt="확대된 이미지" class="modal-image" @click="openImageInNewTab">
                 <button class="modal-close" @click="closeModal">&times;</button>
             </div>
         </div>
@@ -821,6 +821,9 @@
                 closeModal() {
                     this.isModalVisible = false;
                     document.body.style.overflow = ''; // 모달 닫힐 때 스크롤 복원
+                },
+                openImageInNewTab() {
+                    window.open(this.modalImage, '_blank');
                 },
                 contactButtonEffect(event) {
                     // 클릭 위치 기반 간단한 리플 효과
