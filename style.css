@@ -1205,6 +1205,10 @@ header.scrolled {
     transform: translate(-50%, -50%);
 }
 
+#education .edu-description {
+    text-decoration: none;
+}
+
 @media (max-width: 768px) {
     .scroll-top-btn {
         width: 42px;
@@ -1311,5 +1315,24 @@ header.scrolled {
 .exp-card h3 {
     margin-top: 24px;
     margin-bottom: 16px;
+}
+
+.social-icon img,
+.btn-icon,
+.scroll-top-btn img {
+    filter: invert(100%);
+}
+
+.social-icon:hover img {
+    filter: invert(40%) sepia(93%) saturate(1352%) hue-rotate(213deg) brightness(100%) contrast(119%);
+}
+
+/* 다크 테마에서 아이콘 색상 반전 방지 */
+@media (prefers-color-scheme: dark) {
+    .social-icon img,
+    .btn-icon,
+    .scroll-top-btn img {
+        filter: none;
+    }
 }
 
