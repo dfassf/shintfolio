@@ -89,9 +89,18 @@
         .hero .btn {
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
             z-index: 1;
             cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-top: 10px;
         }
         
         .hero .btn:before {
@@ -101,28 +110,53 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, var(--primary), #8A63F5);
+            background-color: rgba(255, 255, 255, 0.08);
             z-index: -1;
-            transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
             transform: scaleX(0);
             transform-origin: 0 50%;
+            transition: transform 0.25s ease;
+        }
+        
+        /* 실제 버튼 내용에 강조 텍스트 효과 */
+        .hero .btn .btn-text {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.25s ease;
+        }
+        
+        /* 호버 효과 - 부드럽게 떠오르는 느낌 */
+        .hero .btn:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            animation: buttonFloat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes buttonFloat {
+            0%, 100% { transform: translateY(-2px); }
+            50% { transform: translateY(-6px); }
         }
         
         .hero .btn:hover:before {
             transform: scaleX(1);
         }
         
-        .hero .btn:hover {
-            box-shadow: 0 6px 20px rgba(99, 72, 239, 0.3);
-            transform: translateY(-2px);
+        .hero .btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.15s ease;
         }
         
         .hero .btn .btn-icon {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* 더 튀는 느낌의 커브 */
+            position: relative;
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
         }
         
         .hero .btn:hover .btn-icon {
-            transform: translateX(4px);
+            transform: translateX(6px);
         }
         
         /* 버튼 클릭 확장 효과 */
@@ -130,15 +164,65 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100px;
-            height: 100px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 102, 255, 0.9) 0%, rgba(0, 102, 255, 0.7) 70%, rgba(0, 102, 255, 0.5) 100%);
-            box-shadow: 0 0 30px rgba(0, 102, 255, 0.6);
+            background: var(--primary);
+            opacity: 0.95;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             z-index: 999;
             pointer-events: none;
             transform: translate(-50%, -50%) scale(0);
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(3px);
+        }
+        
+        /* 네온 글로우 효과 */
+        .hero .btn .neon-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50px;
+            box-shadow: 
+                0 0 10px rgba(0, 162, 255, 0.7),
+                0 0 20px rgba(0, 162, 255, 0.5),
+                0 0 40px rgba(0, 162, 255, 0.3),
+                0 0 80px rgba(0, 162, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -3;
+            filter: blur(5px);
+        }
+        
+        /* 버튼 내부 애니메이션 물결 효과 */
+        .hero .btn .btn-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1px;
+            height: 1px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0);
+            box-shadow: 0 0 80px 40px rgba(255, 255, 255, 0.7);
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes btnWave {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.1);
+            }
+            20% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
         }
         
         /* 최상단 이동 버튼 */
@@ -217,6 +301,86 @@
             color: var(--primary);
             transform: scale(1.05);
         }
+        
+        /* 푸터 스타일 */
+        .footer {
+            background-color: #fafafa;
+            padding: 40px 0 30px;
+            margin-top: 60px;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--black);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-logo:hover {
+            color: var(--primary);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            width: 100%;
+        }
+        
+        .copyright {
+            font-size: 13px;
+            color: #777;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-content {
+                gap: 30px;
+            }
+            
+            .footer-links {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -259,10 +423,12 @@
                         <span>유지보수성과 생산성을 동시에 고려한 설계와 구현, 그리고 사용자 경험까지 아우르는 사고로 팀과 서비스에 기여해왔습니다.</span>
                     </p>
                     <a href="#contact" class="btn" data-aos="fade-up" data-aos-delay="400" @click.prevent="contactButtonEffect">
-                        연락하기
-                        <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8 3L14 8L8 13M14 8H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <div class="btn-text">
+                            연락하기
+                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 3L14 8L8 13M14 8H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
                     </a>
                 </div>
             </div>
@@ -956,6 +1122,46 @@
                 <path d="M8 14L12 10L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
+        
+        <!-- 푸터 -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo" @click="scrollToTop">
+                        <span>엄신우 포트폴리오</span>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <div class="footer-social">
+                            <a href="https://github.com/dfassf" target="_blank" class="social-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2C6.477 2 2 6.477 2 12C2 16.418 4.865 20.166 8.839 21.489C9.339 21.581 9.5 21.278 9.5 21.012C9.5 20.777 9.492 20.014 9.489 19.181C6.727 19.792 6.139 17.949 6.139 17.949C5.684 16.811 5.019 16.509 5.019 16.509C4.097 15.895 5.086 15.908 5.086 15.908C6.108 15.976 6.636 16.92 6.636 16.92C7.545 18.421 9.007 18.007 9.516 17.751C9.609 17.116 9.876 16.703 10.171 16.419C7.958 16.13 5.631 15.278 5.631 11.469C5.631 10.337 6.013 9.406 6.656 8.669C6.54 8.416 6.2 7.443 6.756 6.088C6.756 6.088 7.617 5.818 9.456 7.061C10.268 6.844 11.131 6.735 11.994 6.731C12.857 6.735 13.72 6.844 14.532 7.061C16.371 5.818 17.232 6.088 17.232 6.088C17.788 7.443 17.448 8.416 17.332 8.669C17.975 9.406 18.357 10.337 18.357 11.469C18.357 15.289 16.026 16.126 13.806 16.409C14.171 16.763 14.5 17.466 14.5 18.531C14.5 20.046 14.488 20.677 14.488 21.008C14.488 21.27 14.639 21.577 15.159 21.475C19.158 20.168 22 16.416 22 12C22 6.477 17.523 2 12 2Z" fill="currentColor"/>
+                                </svg>
+                            </a>
+                            <a href="mailto:dfassf@naver.com" class="social-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
+                                </svg>
+                            </a>
+                            <a href="https://gainful-tarn-9ef.notion.site/962545f9df544085a62a17f4056197da" target="_blank" class="social-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4.5 7.5C4.5 6.67157 5.17157 6 6 6H7.5C8.32843 6 9 6.67157 9 7.5V9C9 9.82843 8.32843 10.5 7.5 10.5H6C5.17157 10.5 4.5 9.82843 4.5 9V7.5Z" fill="currentColor"/>
+                                    <path d="M12 4.5H19.5C20.3284 4.5 21 5.17157 21 6V7.5C21 8.32843 20.3284 9 19.5 9H12V4.5Z" fill="currentColor"/>
+                                    <path d="M12 10.5H19.5C20.3284 10.5 21 11.1716 21 12V13.5C21 14.3284 20.3284 15 19.5 15H12V10.5Z" fill="currentColor"/>
+                                    <path d="M12 16.5H19.5C20.3284 16.5 21 17.1716 21 18V19.5C21 20.3284 20.3284 21 19.5 21H12V16.5Z" fill="currentColor"/>
+                                    <path d="M4.5 13.5C4.5 12.6716 5.17157 12 6 12H7.5C8.32843 12 9 12.6716 9 13.5V15C9 15.8284 8.32843 16.5 7.5 16.5H6C5.17157 16.5 4.5 15.8284 4.5 15V13.5Z" fill="currentColor"/>
+                                    <path d="M4.5 19.5C4.5 18.6716 5.17157 18 6 18H7.5C8.32843 18 9 18.6716 9 19.5V21C9 21.8284 8.32843 22.5 7.5 22.5H6C5.17157 22.5 4.5 21.8284 4.5 21V19.5Z" fill="currentColor"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-bottom">
+                        <p class="copyright">© 2025 엄신우. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -982,60 +1188,72 @@
                     document.body.style.overflow = ''; // 모달 닫힐 때 스크롤 복원
                 },
                 contactButtonEffect(event) {
-                    // 클릭 위치 기반 파티클 효과
+                    // 클릭 위치 기반 간단한 리플 효과
                     const btn = event.currentTarget;
                     const btnRect = btn.getBoundingClientRect();
                     const x = event.clientX - btnRect.left;
                     const y = event.clientY - btnRect.top;
                     
-                    // 파티클 컨테이너 생성
-                    const particlesContainer = document.createElement('div');
-                    particlesContainer.className = 'particles-container';
-                    particlesContainer.style.position = 'absolute';
-                    particlesContainer.style.left = '0';
-                    particlesContainer.style.top = '0';
-                    particlesContainer.style.width = '100%';
-                    particlesContainer.style.height = '100%';
-                    particlesContainer.style.overflow = 'hidden';
-                    particlesContainer.style.pointerEvents = 'none';
-                    btn.appendChild(particlesContainer);
+                    // 버튼 내부 리플 효과 추가 (토스 스타일의 미니멀한 리플)
+                    const ripple = document.createElement('div');
+                    ripple.style.position = 'absolute';
+                    ripple.style.width = '5px';
+                    ripple.style.height = '5px';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.7)';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.transformOrigin = 'center';
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    ripple.style.pointerEvents = 'none';
+                    btn.appendChild(ripple);
                     
-                    // 파티클 생성
-                    const particleCount = 30;
-                    const colors = ['#0066FF', '#3388FF', '#66AAFF', '#99CCFF', '#CCEEFF'];
+                    // 리플 애니메이션
+                    gsap.to(ripple, {
+                        scale: 25,
+                        opacity: 0,
+                        duration: 0.6,
+                        ease: 'power1.out',
+                        onComplete: () => {
+                            ripple.remove();
+                        }
+                    });
                     
-                    for (let i = 0; i < particleCount; i++) {
-                        const particle = document.createElement('div');
-                        const size = Math.random() * 8 + 4;
-                        const angle = Math.random() * Math.PI * 2;
-                        const speed = Math.random() * 60 + 40;
-                        const distance = Math.random() * 60 + 60;
-                        const color = colors[Math.floor(Math.random() * colors.length)];
-                        
-                        particle.style.position = 'absolute';
-                        particle.style.width = `${size}px`;
-                        particle.style.height = `${size}px`;
-                        particle.style.borderRadius = '50%';
-                        particle.style.backgroundColor = color;
-                        particle.style.left = `${x}px`;
-                        particle.style.top = `${y}px`;
-                        particle.style.pointerEvents = 'none';
-                        particle.style.opacity = '1';
-                        particlesContainer.appendChild(particle);
-                        
-                        gsap.to(particle, {
-                            x: Math.cos(angle) * distance,
-                            y: Math.sin(angle) * distance,
-                            opacity: 0,
-                            duration: 0.8 + Math.random() * 0.6,
-                            ease: 'power2.out',
-                            onComplete: () => {
-                                particle.remove();
-                            }
+                    // 버튼 피드백 (토스 스타일 - 다이내믹한 피드백)
+                    gsap.timeline()
+                        .to(btn, {
+                            scale: 0.93, 
+                            duration: 0.1, 
+                            ease: 'power1.out',
+                        })
+                        .to(btn, {
+                            scale: 1.03, 
+                            duration: 0.2, 
+                            ease: 'back.out(2)'
+                        })
+                        .to(btn, {
+                            scale: 1, 
+                            duration: 0.15, 
+                            ease: 'power2.out'
                         });
-                    }
                     
-                    // 확장 원 효과 생성
+                    // 버튼 아이콘 효과
+                    const btnIcon = btn.querySelector('.btn-icon');
+                    gsap.timeline()
+                        .to(btnIcon, {
+                            x: 5,
+                            duration: 0.1
+                        })
+                        .to(btnIcon, {
+                            x: -2,
+                            duration: 0.1
+                        })
+                        .to(btnIcon, {
+                            x: 0,
+                            duration: 0.2,
+                            ease: 'power2.out'
+                        });
+                    
+                    // 확장 원 효과 생성 (미니멀한 버전)
                     const circle = document.createElement('div');
                     circle.className = 'expanding-circle';
                     document.body.appendChild(circle);
@@ -1046,72 +1264,59 @@
                     
                     // 원이 화면을 커버하기 위해 필요한 스케일 계산
                     const maxDim = Math.max(window.innerWidth, window.innerHeight);
-                    const scale = maxDim * 2.5 / 100;
-                    
-                    // 버튼 확대 효과
-                    gsap.to(btn, {
-                        scale: 1.2, 
-                        duration: 0.3, 
-                        ease: 'power1.out'
-                    });
+                    const scale = maxDim * 3 / 60; // 미니멀한 원 크기에 맞게 조정
                     
                     const contactSection = document.getElementById('contact');
                     
-                    // 원 확장 애니메이션
+                    // 원 확장 애니메이션 (토스 스타일 - 약간 더 활기찬 전환)
                     gsap.to(circle, {
                         scale: scale,
                         opacity: 1,
-                        duration: 0.4, // 확장 시간 단축
+                        duration: 0.35,
                         ease: 'power2.inOut',
                         onComplete: () => {
-                            // 원이 완전히 확장되면 부드럽게 연락처 섹션으로 이동
+                            // 원이 완전히 확장되면 연락처 섹션으로 이동
                             if (contactSection) {
                                 // 스크롤 애니메이션 없이 바로 이동
                                 const sectionTop = contactSection.getBoundingClientRect().top + window.scrollY - 80;
                                 window.scrollTo({
                                     top: sectionTop,
-                                    behavior: 'auto' // smooth 대신 auto 사용
+                                    behavior: 'auto'
                                 });
                                 
-                                // 카드 애니메이션 효과 준비
+                                // 카드 애니메이션 효과 준비 (토스 스타일 - 약간 더 다이내믹한 슬라이드인)
                                 const cards = contactSection.querySelectorAll('.skill-card');
                                 cards.forEach((card) => {
                                     card.style.opacity = '0';
-                                    card.style.transform = 'translateY(40px) scale(0.9)';
+                                    card.style.transform = 'translateY(30px)';
                                 });
                                 
-                                // 약간의 지연 후 페이드아웃 시작
+                                // 부드러운 페이드아웃
                                 setTimeout(() => {
                                     // 원 페이드아웃
                                     gsap.to(circle, {
                                         opacity: 0,
-                                        duration: 0.8,
-                                        ease: 'power1.inOut',
+                                        duration: 0.4,
+                                        ease: 'power2.out',
                                         onComplete: () => {
                                             circle.remove();
                                         }
                                     });
                                     
-                                    // 연락처 섹션 카드 애니메이션
+                                    // 연락처 섹션 카드 애니메이션 (토스 스타일 - 순차적인 페이드인)
                                     cards.forEach((card, index) => {
                                         gsap.to(card, {
                                             y: 0, 
                                             opacity: 1, 
-                                            scale: 1,
-                                            duration: 0.7,
-                                            ease: 'back.out(1.7)',
-                                            delay: 0.1 * index
+                                            duration: 0.35,
+                                            ease: 'back.out(1.5)',
+                                            delay: 0.07 * index
                                         });
                                     });
                                 }, 100);
                             }
                         }
                     });
-                    
-                    // 파티클 컨테이너 제거
-                    setTimeout(() => {
-                        particlesContainer.remove();
-                    }, 1500);
                 },
                 handleScroll() {
                     // 헤더와 최상단 이동 버튼 가시성 설정
