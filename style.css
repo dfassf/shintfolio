@@ -78,7 +78,7 @@ header {
     height: 60px;
     display: flex;
     align-items: center;
-    position: fixed;
+    position: fixed !important;
     top: 0;
     left: 0;
     width: 100%;
@@ -942,20 +942,21 @@ section {
 @media (max-width: 768px) {
     .modal-content {
         max-width: 95%;
-    }
+    }   
 }
 
 /* 스크롤 프로그레스 바 스타일 */
 .progress-container {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 4px;
+    height: 2px;
     background: transparent;
+    z-index: 1000;
 }
 .progress-bar {
-    height: 4px;
+    height: 2px;
     background: var(--primary);
     width: 0%;
     transition: width 0.1s ease;
@@ -1334,5 +1335,61 @@ header.scrolled {
     .scroll-top-btn img {
         filter: none;
     }
+}
+
+/* 링크 밑줄 제거 */
+a {
+    text-decoration: none;
+}
+.contact-link, .social-icon {
+    text-decoration: none;
+}
+a:hover, .contact-link:hover, .social-icon:hover {
+    text-decoration: none;
+}
+
+/* 프로그레스 바 스타일 */
+.progress-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: transparent;
+    z-index: 1000;
+}
+
+.progress-bar {
+    height: 2px;
+    background: var(--primary);
+    width: 0%;
+}
+
+/* 헤더 메뉴 활성화 스타일 */
+.header-nav a {
+    position: relative;
+    transition: color 0.3s ease;
+    padding-bottom: 5px;
+}
+
+.header-nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.header-nav a:hover::after,
+.header-nav a.active::after {
+    width: 100%;
+}
+
+.header-nav a.active {
+    color: var(--primary);
+    font-weight: 600;
 }
 

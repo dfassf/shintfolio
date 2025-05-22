@@ -18,30 +18,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollToPlugin.min.js"></script>
 </head>
-<body>
-    <!-- 스크롤 프로그레스 바 -->
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
+<body style="padding-top: 60px;">
+    <!-- 스크롤 프로그레스 바 제거 -->
     
     <div id="app">
         <!-- 헤더 -->
-        <header :class="{ 'scrolled': headerScrolled }">
+        <header :class="{ 'scrolled': headerScrolled }" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
             <div class="container">
                 <div class="header-content">
                     <div class="logo" style="pointer-events: none;">엄신우</div>
                     <nav class="header-nav">
                         <ul>
-                            <li><a href="#" @click.prevent="scrollToTop">프로필</a></li>
-                            <li><a href="#about" @click.prevent="scrollToSection('about')">소개</a></li>
-                            <li><a href="#experience" @click.prevent="scrollToSection('experience')">경력</a></li>
-                            <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')">포트폴리오</a></li>
-                            <li><a href="#skills" @click.prevent="scrollToSection('skills')">기술 스택</a></li>
-                            <li><a href="#education" @click.prevent="scrollToSection('education')">학력</a></li>
-                            <li><a href="#contact" @click.prevent="scrollToSection('contact')">연락처</a></li>
+                            <li><a href="#" @click.prevent="scrollToTop" :class="{ 'active': activeSection === 'home' }">프로필</a></li>
+                            <li><a href="#about" @click.prevent="scrollToSection('about')" :class="{ 'active': activeSection === 'about' }">소개</a></li>
+                            <li><a href="#experience" @click.prevent="scrollToSection('experience')" :class="{ 'active': activeSection === 'experience' }">경력</a></li>
+                            <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')" :class="{ 'active': activeSection === 'portfolio' }">포트폴리오</a></li>
+                            <li><a href="#skills" @click.prevent="scrollToSection('skills')" :class="{ 'active': activeSection === 'skills' }">기술 스택</a></li>
+                            <li><a href="#education" @click.prevent="scrollToSection('education')" :class="{ 'active': activeSection === 'education' }">학력</a></li>
+                            <li><a href="#contact" @click.prevent="scrollToSection('contact')" :class="{ 'active': activeSection === 'contact' }">연락처</a></li>
                         </ul>
                     </nav>
                 </div>
+            </div>
+            <!-- 프로그레스 바 헤더 하단으로 이동 -->
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
             </div>
         </header>
 
@@ -336,6 +337,9 @@
                 typingText: '4년차 Node.js 백엔드 개발자',
                 typingIndex: 0,
                 isTyping: false,
+                activeSection: 'home',
+                scrollY: 0,
+                sectionOffsets: {},
                 
                 // 콘텐츠 데이터 (텍스트 및 내용)
                 contents: {
@@ -944,20 +948,46 @@
                     });
                 },
                 handleScroll() {
-                    // 헤더와 최상단 이동 버튼 가시성 설정
-                    const scrollY = window.scrollY;
-                    const headerThreshold = 50;
-                    const btnThreshold = 200;
+                    // 스크롤 위치 저장
+                    this.scrollY = window.scrollY;
                     
-                    // 헤더 스타일과 최상단 이동 버튼 업데이트
-                    this.headerScrolled = scrollY > headerThreshold;
-                    this.scrolled = scrollY > btnThreshold;
+                    // 헤더 스타일 변경
+                    this.headerScrolled = window.scrollY > 50;
                     
-                    // 스크롤 프로그레스 바
+                    // 프로그레스 바 업데이트
                     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                     const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                    const scrolledPercent = (scrollTop / scrollHeight) * 100;
-                    document.getElementById('progressBar').style.width = scrolledPercent + '%';
+                    const scrollProgress = (scrollTop / scrollHeight) * 100;
+                    const progressBar = document.getElementById('progressBar');
+                    if (progressBar) {
+                        progressBar.style.width = scrollProgress + '%';
+                    }
+                    
+                    // 현재 섹션 감지하기
+                    this.detectCurrentSection();
+                },
+                detectCurrentSection() {
+                    // 각 섹션의 위치 가져오기
+                    const sections = ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'];
+                    const offset = 150; // 헤더 높이 + 여유 공간
+                    
+                    // 맨 위에 있는 경우 홈 섹션 활성화
+                    if (window.scrollY < 100) {
+                        this.activeSection = 'home';
+                        return;
+                    }
+                    
+                    // 각 섹션을 검사하여 현재 보이는 섹션 결정
+                    for (let i = sections.length - 1; i >= 0; i--) {
+                        const section = document.getElementById(sections[i]);
+                        if (section) {
+                            const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                            if (window.scrollY >= sectionTop - offset) {
+                                this.activeSection = sections[i];
+                                break;
+                            }
+                        }
+                    }
                 },
                 parallaxEffect() {
                     if (this.$refs.parallaxBg) {
@@ -988,15 +1018,30 @@
                 },
                 scrollToTop() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    this.activeSection = 'home';
                 },
-                scrollToSection(sectionId, offset = 80) {
+                scrollToSection(sectionId) {
                     const section = document.getElementById(sectionId);
                     if (section) {
-                        const sectionTop = section.getBoundingClientRect().top + window.scrollY - offset;
+                        // 헤더의 실제 높이 계산 (기본값 + 여유 공간)
+                        const headerHeight = 60;
+                        const offset = 20; // 추가 여유 공간
+                        const totalOffset = headerHeight + offset;
+                        
+                        // 섹션의 위치 계산
+                        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                        
+                        // 스크롤 위치 계산 (헤더 높이 고려)
+                        const scrollPosition = sectionTop - totalOffset;
+                        
+                        // 스크롤 실행
                         window.scrollTo({
-                            top: sectionTop,
+                            top: scrollPosition,
                             behavior: 'smooth'
                         });
+                        
+                        // 활성 섹션 업데이트
+                        this.activeSection = sectionId;
                     }
                 },
                 initAnimations() {
@@ -1138,6 +1183,18 @@
                         });
                         img.style.cursor = 'pointer';
                     });
+                    
+                    // 각 섹션의 초기 위치 계산
+                    const sections = ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'];
+                    sections.forEach(sectionId => {
+                        const section = document.getElementById(sectionId);
+                        if (section) {
+                            this.sectionOffsets[sectionId] = section.offsetTop;
+                        }
+                    });
+                    
+                    // 초기 스크롤 위치에 따른 현재 섹션 감지
+                    this.handleScroll();
                 });
                 
                 // 스크롤 이벤트 리스너
@@ -1154,18 +1211,5 @@
             }
         });
     </script>
-
-    <style>
-        /* 링크 밑줄 제거 */
-        a {
-            text-decoration: none;
-        }
-        .contact-link, .social-icon {
-            text-decoration: none;
-        }
-        a:hover, .contact-link:hover, .social-icon:hover {
-            text-decoration: none;
-        }
-    </style>
 </body>
 </html>
