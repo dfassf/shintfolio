@@ -977,17 +977,19 @@ header.scrolled {
 }
 
 [data-aos] {
-    opacity: 0;
-    transition-property: opacity, transform;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
 }
 [data-aos].aos-animate {
-    opacity: 1;
+    opacity: 1 !important;
+    transform: none !important;
 }
 [data-aos="fade-up"] {
-    transform: translateY(20px);
+    transform: none !important;
 }
 [data-aos="fade-up"].aos-animate {
-    transform: translateY(0);
+    transform: none !important;
 }
 
 .hero .btn {
