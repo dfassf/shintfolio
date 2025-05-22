@@ -7,62 +7,49 @@
     <link rel="icon" href="assets/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <link rel="stylesheet" href="style.css">
-    <!-- Vue CDN 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script> -->
-    
-    <!-- 스크롤 효과를 위한 라이브러리 추가 -->
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollToPlugin.min.js"></script>
 </head>
-<body>
-    <!-- 스크롤 프로그레스 바 -->
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
+<body style="padding-top: 60px;">
     
     <div id="app">
-        <!-- 헤더 -->
         <header :class="{ 'scrolled': headerScrolled }">
             <div class="container">
                 <div class="header-content">
-                    <div class="logo" @click="scrollToTop" style="cursor: pointer;">엄신우</div>
+                    <div class="logo" style="pointer-events: none;">엄신우</div>
                     <nav class="header-nav">
                         <ul>
-                            <li><a href="#about" @click.prevent="scrollToSection('about')">소개</a></li>
-                            <li><a href="#experience" @click.prevent="scrollToSection('experience')">경력</a></li>
-                            <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')">포트폴리오</a></li>
-                            <li><a href="#skills" @click.prevent="scrollToSection('skills')">기술 스택</a></li>
-                            <li><a href="#education" @click.prevent="scrollToSection('education')">학력</a></li>
-                            <li><a href="#contact" @click.prevent="scrollToSection('contact')">연락처</a></li>
+                            <li><a href="#" @click.prevent="scrollToTop" :class="{ 'active': activeSection === 'home' }">프로필</a></li>
+                            <li><a href="#about" @click.prevent="scrollToSection('about')" :class="{ 'active': activeSection === 'about' }">소개</a></li>
+                            <li><a href="#experience" @click.prevent="scrollToSection('experience')" :class="{ 'active': activeSection === 'experience' }">경력</a></li>
+                            <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')" :class="{ 'active': activeSection === 'portfolio' }">포트폴리오</a></li>
+                            <li><a href="#skills" @click.prevent="scrollToSection('skills')" :class="{ 'active': activeSection === 'skills' }">기술 스택</a></li>
+                            <li><a href="#education" @click.prevent="scrollToSection('education')" :class="{ 'active': activeSection === 'education' }">학력</a></li>
+                            <li><a href="#contact" @click.prevent="scrollToSection('contact')" :class="{ 'active': activeSection === 'contact' }">연락처</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
         </header>
-
-        <!-- 히어로 섹션 -->
         <section class="hero">
             <div class="parallax-bg" ref="parallaxBg"></div>
             <div class="container">
-                <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
-                    <div class="hero-tag">백엔드 개발자</div>
-                    <h1>초기 설계부터 운영까지 경험한 <br><span class="typing" ref="typing">4년차 Node.js 백엔드 개발자</span></h1>
-                    <p class="hero-description" data-aos="fade-up" data-aos-delay="200">
-                        <span>4년차 백엔드 중심의 풀스택 개발자로, NestJS 기반의 서버 아키텍처 설계와 도메인 모델링에 강점을 가지고 있습니다.</span>
-                        <span>인증서 발행량 30만건, 카카오톡 채널 친구 1만 5천명에 달하는 서비스의 초기 개발부터 운영, 리팩토링, 마이그레이션까지 전 주기 경험을 보유하고 있으며, 기술 부채 해소와 구조적 개선을 통해 시스템 안정성과 비용 효율을 실질적으로 개선한 경험이 있습니다.</span>
-                        <span>도메인 요구사항을 빠르게 파악하고, 기획자 및 외부 서비스 담당자와의 긴밀한 협업을 통해 문제를 구체화하고 해결해나가는 데 익숙합니다.</span>
-                        <span>유지보수성과 생산성을 동시에 고려한 설계와 구현, 그리고 사용자 경험까지 아우르는 사고로 팀과 서비스에 기여해왔습니다.</span>
+                <div class="hero-content">
+                    <div class="hero-tag">{{ heroSection.tag }}</div>
+                    <h1>{{ heroSection.title }} <br><span class="typing" ref="typing">{{ typingText }}</span></h1>
+                    <p class="hero-description">
+                        <span v-for="(paragraph, index) in heroSection.description" :key="index">{{ paragraph }}</span>
                     </p>
-                    <a href="#contact" class="btn" data-aos="fade-up" data-aos-delay="400" @click.prevent="contactButtonEffect">
+                    <a href="#contact" class="btn" @click.prevent="contactButtonEffect">
                         <div class="btn-text">
-                            연락하기
-                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 3L14 8L8 13M14 8H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                            {{ heroSection.contactButtonText }}
+                            <img src="assets/icons/arrow-right.svg" class="btn-icon" alt="arrow right" width="16" height="16">
                         </div>
                     </a>
                 </div>
@@ -72,175 +59,52 @@
         <!-- 소개 섹션 -->
         <section id="about">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">소개</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">백엔드 개발에 풀스택 경험을 활용해요.</p>
+                <h2 class="section-title">{{ aboutSection.title }}</h2>
+                <p class="section-subtitle">{{ aboutSection.subtitle }}</p>
                 
-                <div class="about-content" data-aos="fade-up" data-aos-delay="200">
-                    <p>프론트엔드 중심 풀스택 개발자로 커리어를 시작했지만 
-                        서티라이프에서 백엔드 설계 및 개발을 담당하게 되며 백엔드에 더 큰 전문성을 가지게 되었습니다. 
-                        약 2년간 의료 인증서 발행 서비스의 초기 개발부터 참여하여 30만 건 이상의 인증서 발행과 1만 5천 명 이상의 카카오 로그인 회원을 보유한 
-                        안정적인 서비스가 될 때까지 운영에 참여하였습니다.</p>
-                    <p>NestJS, MongoDB, TypeScript를 주력으로 사용하며, 클린 코드와 유지보수성 높은 아키텍처 설계에 중점을 둡니다. 
-                        프론트엔드 개발 경험을 통해 API 설계 시 화면단에서의 데이터 사용성과 효율성을 고려할 수 있는 것이 저의 강점입니다.</p>
-                    <p>기획자와 소통하며 기능의 사용성과 쓰임새에 대해 늘 고민하는 것이 습관화 되어있으며, 
-                        팀 내에서 기술적 의사결정과 문제 해결에 적극적으로 참여하는 개발자가 되고자 합니다.</p>
+                <div class="about-content">
+                    <p v-for="(paragraph, index) in aboutSection.paragraphs" :key="index">{{ paragraph }}</p>
                 </div>
             </div>
         </section>
 
-        <!-- 경력 섹션 -->
         <section id="experience">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">경력</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">실무에서의 역할과 문제 해결 경험을 소개해요.</p>
+                <h2 class="section-title">{{ experienceSection.title }}</h2>
+                <p class="section-subtitle">{{ experienceSection.subtitle }}</p>
                 
                 <div class="exp-list">
-                    <div class="exp-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="exp-card" v-for="(company, index) in experienceSection.companies" :key="index">
                         <div class="exp-header">
-                            <div class="exp-logo"><img src="assets/company_logos/certilife.webp" alt="서티라이프"></div>
+                            <div class="exp-logo"><img :src="company.logoSrc" :alt="company.name"></div>
                             <div>
-                                <div class="exp-company">서티라이프</div>
-                                <div class="exp-duration">2023.04 - 2025.05(2년 2개월)</div>
+                                <div class="exp-company">{{ company.name }}</div>
+                                <div class="exp-duration">{{ company.duration }}</div>
                             </div>
                         </div>
-                        <div class="exp-position">백엔드 중심 풀스택 개발자</div>
-                        <p class="exp-description">
-                            30만 건 이상의 인증서를 발행한 의료 인증서 플랫폼으로, 병원과 환자 간 디지털 의료 인증서를 제공하며 제조사와 환자의 연결고리를 만들어 주는 서비스입니다. 
-                            초기 프론트엔드, 백엔드 개발부터 안정적인 운영까지 핵심 개발자로 참여했습니다.
-                        </p>
+                        <div class="exp-position">{{ company.position }}</div>
+                        <p class="exp-description">{{ company.description }}</p>
                         
                         <h3>역할 및 기여</h3>
                         <ul class="highlight-list">
-                            <li class="highlight-item">
-                                <span>병원 관리자, 제조사 관리자, 인증서 수신화면, 어드민 페이지 개발 및 유지보수</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>커스텀 인증서 발행/템플릿 관리, 이벤트 및 전자계약 등 주요 도메인 풀스택 개발 및 고도화</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>MongoDB 기반의 도메인 모델링, 인증 및 알림 관련 API 개발 및 자동화 작업 수행</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>알림톡 관련 기능 유지보수 및 리팩토링</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>카카오클라우드 → Azure 이전 작업 지원</span>
+                            <li class="highlight-item" v-for="(role, roleIndex) in company.roles" :key="'role-'+roleIndex">
+                                <span>{{ role }}</span>
                             </li>
                         </ul>
 
                         <h3>성과</h3>
                         <ul class="highlight-list">
-                            <li class="highlight-item">
-                                <span>자체 전자계약 기능 구현으로 연간 약 400만 원 외부 서비스 비용 절감</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>인증서 발행량 약 30만 건 달성, 카카오 채널 유입자 수 15,000명 확보</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>Azure Static Web App 및 Vite 도입을 통해 연간 약 60만 원 인프라 비용 절감</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>무한 계층 카테고리 구조 도입으로 인증서 관리 유연성 개선</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>지속적인 리팩토링을 통해 유지보수성 향상 및 오류 발생률 감소</span>
+                            <li class="highlight-item" v-for="(achievement, achievementIndex) in company.achievements" :key="'achievement-'+achievementIndex">
+                                <span>{{ achievement }}</span>
                             </li>
                         </ul>
 
                         <h3>주요 경험 및 문제 해결 사례</h3>
                         <ul class="highlight-list">
-                            <li class="highlight-item">
-                                <strong>서비스 초기 개발 및 시스템 안정화</strong>
+                            <li class="highlight-item" v-for="(experience, expIndex) in company.keyExperiences" :key="'exp-'+expIndex">
+                                <strong>{{ experience.title }}</strong>
                                 <ul class="sub-list">
-                                    <li class="sub-item">기존 외주팀이 구현한 Express 기반 프로젝트를 NestJS로 마이그레이션하여 가독성과 확장성 향상, 타 개발자 협업 환경 개선</li>
-                                    <li class="sub-item">Bootstrap 기반 스타일 충돌 문제를 직접 구현 방식으로 대체하여 운영 환경 안정성 확보</li>
-                                    <li class="sub-item">웹팩 기반 레거시 관리자 프로젝트를 Vite로 전환, 빌드 시간 약 40% 단축</li>
-                                </ul>
-                            </li>
-                            <li class="highlight-item">
-                                <strong>핵심 기능 구조화 및 운영 효율 개선</strong>
-                                <ul class="sub-list">
-                                    <li class="sub-item">고정된 인증서 구조를 무한 카테고리 기반 설계로 변경, 다양한 케이스에 유연하게 대응</li>
-                                    <li class="sub-item">외부 API 장애 영향을 줄이기 위해 내부 DB 우선 조회 및 서비스 제공자 분기 처리, 연간 약 400만원 비용 절감</li>
-                                    <li class="sub-item">카카오 개인정보 수집 항목 재정비 및 심사 통과, 신규 로그인 기능 도입으로 플러스 친구 약 1.5만 명 유입</li>
-                                </ul>
-                            </li>
-                            <li class="highlight-item">
-                                <strong>레거시 개선 및 리팩토링</strong>
-                                <ul class="sub-list">
-                                    <li class="sub-item">단일 책임 원칙 기반으로 인증서 발행 로직 기능 분리, 사이드 이펙트 제거 및 QA 작업 간소화</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="exp-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="exp-header">
-                            <div class="exp-logo"><img src="assets/company_logos/musit.webp" alt="뮤짓"></div>
-                            <div>
-                                <div class="exp-company">뮤짓</div>
-                                <div class="exp-duration">2022.02 - 2023.04(1년 3개월)</div>
-                            </div>
-                        </div>
-                        <div class="exp-position">프론트엔드 중심 풀스택 개발자</div>
-                        <p class="exp-description">
-                            블록체인 기술을 활용한 음악 NFT 거래 플랫폼으로, Play 2 Earn을 모토로 한 서비스입니다. 앱, 웹페이지, 백엔드 API, 스마트 컨트랙트 부분 개발을 주로 담당했습니다.
-                        </p>
-                        
-                        <h3>역할 및 기여</h3>
-                        <ul class="highlight-list">
-                            <li class="highlight-item">
-                                <span>서비스 앱 제작</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>서비스 웹 버전 제작</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>앱/웹에서 필요한 API 제작</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>NFT 민팅 서버 및 API 구축, 클라우드 인프라 배포</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>NFT 민팅, 화이트리스트 민팅 페이지 제작</span>
-                            </li>
-                        </ul>
-
-                        <h3>성과</h3>
-                        <ul class="highlight-list">
-                            <li class="highlight-item">
-                                <span>자체 NFT 민팅 웹앱 개발 및 출시, ERC-721A 도입으로 가스비 최적화</span>
-                            </li>
-                            <li class="highlight-item">
-                                <span>Flutter 기반 앱 프로토타입 5일 내 구현</span>
-                            </li>
-                        </ul>
-
-                        <h3>주요 경험 및 문제 해결 사례</h3>
-                        <ul class="highlight-list">
-                            <li class="highlight-item">
-                                <strong>긴급 프로토타입 제작</strong>
-                                <ul class="sub-list">
-                                    <li class="sub-item">외주 앱 폐기 후 5일 내 시연용 앱을 Flutter로 직접 제작, 빠른 의사결정과 실행으로 시연 일정 차질 없이 완료</li>
-                                </ul>
-                            </li>
-                            <li class="highlight-item">
-                                <strong>NFT 민팅 가스비 최적화</strong>
-                                <ul class="sub-list">
-                                    <li class="sub-item">ERC-721A 도입 및 메타데이터 외부 저장 구조로 전환하여 NFT 100개 민팅 시 가스비 90% 절감 ($900 → $80 수준)</li>
-                                </ul>
-                            </li>
-                            <li class="highlight-item">
-                                <strong>Millim:x 앱 개발</strong>
-                                <ul class="sub-list">
-                                    <li class="sub-item">Flutter 기반 앱 개발, 음악 플레이어 기능 및 NFT 거래소 기능 구현</li>
-                                    <li class="sub-item">인앱 결제 구현</li>
-                                </ul>
-                            </li>
-                            <li class="highlight-item">
-                                <strong>Millim:x 웹 버전 프론트엔드 제작</strong>
-                                <ul class="sub-list">
-                                    <li class="sub-item">메타마스크 지갑 연결, 스마트컨트랙트 통신 기능 등 앱에서 제공되는 모든 기능 구현</li>
+                                    <li class="sub-item" v-for="(detail, detailIndex) in experience.details" :key="'detail-'+detailIndex">{{ detail }}</li>
                                 </ul>
                             </li>
                         </ul>
@@ -248,559 +112,154 @@
                 </div>
             </div>
         </section>
-
-        <!-- 포트폴리오 섹션 -->
         <section id="portfolio">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">포트폴리오</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">다양한 서비스를 개발했어요. 스크린샷을 클릭하면 확대해서 볼 수 있어요.</p>
-                
-                <!-- 스타일 1: 개선된 쇼케이스 -->
-                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="section-title">{{ portfolioSection.title }}</h2>
+                <p class="section-subtitle">{{ portfolioSection.subtitle }}</p>
+                <div class="portfolio-item" 
+                     v-for="(project, index) in portfolioSection.projects" 
+                     :key="index">
                     <div class="portfolio-header">
-                        <h3 class="portfolio-title">병원관리자 웹페이지</h3>
-                        <span class="company-tag">서티라이프</span>
+                        <h3 class="portfolio-title">{{ project.title }}</h3>
+                        <span class="company-tag">{{ project.company }}</span>
                     </div>
                     
                     <div class="portfolio-content">
                         <div class="portfolio-desc">
                             <h4>프로젝트 개요</h4>
-                            <p>서티라이프 서비스의 병원 사용자 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 병원과 제조사를 연결하는 인증서 관리 플랫폼으로, 환자 정보와 인증서 발행을 효율적으로 관리할 수 있는 시스템입니다.</p>
+                            <p>{{ project.overview }}</p>
                             
                             <h4>주요 기여</h4>
                             <ul class="feature-list">
-                                <li class="feature-item">초기 화면 전체 개발(FE)</li>
-                                <li class="feature-item">인증서 수신화면 병원 프로젝트에서 분리(FE)</li>
-                                <li class="feature-item">치과 인증서 발행 페이지 리팩토링(FE)</li>
-                                <li class="feature-item">커스텀 인증서 고도화(FE, BE) - 무한 카테고리 개념 도입</li>
-                                <li class="feature-item">OpenAI API 사용한 번역 기능 추가</li>
-                                <li class="feature-item">레거시 Bootstrap 제거 후 자체 CSS로 전환</li>
+                                <li class="feature-item" v-for="(contribution, cIndex) in project.contributions" :key="'contrib-'+cIndex">
+                                    {{ contribution }}
+                                </li>
                             </ul>
-                            
                             <div class="tech-stack">
                                 <h4>사용 기술</h4>
                                 <div class="tech-tags">
-                                    <span class="tech-tag">Vue.js</span>
-                                    <span class="tech-tag">NestJS</span>
-                                    <span class="tech-tag">MongoDB</span>
+                                    <span class="tech-tag" v-for="(tech, tIndex) in project.technologies" :key="'tech-'+tIndex">
+                                        {{ tech }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="portfolio-gallery">
-                        <h4>주요 기능 스크린샷</h4>
-                        
-                        <div class="category-section">
-                            <div class="category-label">인증서 발행 및 설정</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/hospital_01.png" alt="인증서 발행 및 설정 1" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/hospital_02.png" alt="인증서 발행 및 설정 2" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/hospital_03.png" alt="인증서 발행 및 설정 3" class="gallery-img">
+                        <h4>{{ project.galleryTitle }}</h4>
+                        <template v-if="project.categories && project.categories.length > 0">
+                            <div class="category-section" v-for="(category, catIndex) in project.categories" :key="'cat-'+catIndex">
+                                <div class="category-label">{{ category.name }}</div>
+                                <div class="gallery-grid" :class="{ 'single': category.images.length === 1 }">
+                                    <div class="gallery-item" v-for="(image, imgIndex) in category.images" :key="'img-'+imgIndex">
+                                        <img :src="image.src" :alt="image.alt" class="gallery-img" @click="openModal(image.src)">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="category-section">
-                            <div class="category-label">시술동의서 및 계약서</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/hospital_04.png" alt="시술동의서" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/hospital_05.png" alt="근로계약서" class="gallery-img">
+                        </template>
+                        <template v-else>
+                            <div class="gallery-grid" :class="{ 'single': project.images.length === 1 }">
+                                <div class="gallery-item" v-for="(image, imgIndex) in project.images" :key="'img-'+imgIndex">
+                                    <img :src="image.src" :alt="image.alt" class="gallery-img" @click="openModal(image.src)">
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="category-section">
-                            <div class="category-label">QR로그인 및 앱 다운로드</div>
-                            <div class="gallery-grid single">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/hospital_06.png" alt="QR로그인" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 추가 프로젝트: 제조사 관리자 -->
-                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="300">
-                    <div class="portfolio-header">
-                        <h3 class="portfolio-title">제조사 관리자 웹페이지</h3>
-                        <span class="company-tag">서티라이프</span>
-                    </div>
-                    
-                    <div class="portfolio-content">
-                        <div class="portfolio-desc">
-                            <h4>프로젝트 개요</h4>
-                            <p>서티라이프 서비스의 제조사 사용자 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 제조사와 병원 간의 계약 관리 및 이벤트 데이터 분석을 위한 대시보드를 제공합니다.</p>
-                            
-                            <h4>주요 기여</h4>
-                            <ul class="feature-list">
-                                <li class="feature-item">조회 화면 전체 개발(FE)</li>
-                                <li class="feature-item">전자계약 마이그레이션(FE, BE) - 서드파티 의존성 감소</li>
-                                <li class="feature-item">이벤트 대시보드 개발(FE, BE)</li>
-                                <li class="feature-item">서버리스 함수로 배치 구성</li>
-                            </ul>
-                            
-                            <div class="tech-stack">
-                                <h4>사용 기술</h4>
-                                <div class="tech-tags">
-                                    <span class="tech-tag">Vue.js</span>
-                                    <span class="tech-tag">NestJS</span>
-                                    <span class="tech-tag">MongoDB</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="portfolio-gallery">
-                        <h4>주요 기능 스크린샷</h4>
-                        
-                        <div class="category-section">
-                            <div class="category-label">전자계약</div>
-                            <div class="gallery-grid single">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/manufacturer_01.png" alt="전자계약" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="category-section">
-                            <div class="category-label">이벤트 대시보드</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/manufacturer_02.png" alt="이벤트 대시보드 1" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/certilife/manufacturer_03.png" alt="이벤트 대시보드 2" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 추가 프로젝트: 인증서 수신화면 -->
-                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="400">
-                    <div class="portfolio-header">
-                        <h3 class="portfolio-title">인증서 수신화면 페이지</h3>
-                        <span class="company-tag">서티라이프</span>
-                    </div>
-                    
-                    <div class="portfolio-content">
-                        <div class="portfolio-desc">
-                            <h4>프로젝트 개요</h4>
-                            <p>서티라이프 서비스의 병원 방문자(환자) 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 인증서 발행 후 알림톡 버튼을 통해 진입하는 화면입니다.</p>
-                            
-                            <h4>주요 기여</h4>
-                            <ul class="feature-list">
-                                <li class="feature-item">클립 연동</li>
-                                <li class="feature-item">랜딩 속도 약 77% 개선</li>
-                            </ul>
-                            
-                            <div class="tech-stack">
-                                <h4>사용 기술</h4>
-                                <div class="tech-tags">
-                                    <span class="tech-tag">Vue.js</span>
-                                    <span class="tech-tag">Kakao SDK</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="portfolio-gallery">
-                        <h4>서비스 스크린샷</h4>
-                        
-                        <div class="gallery-grid">
-                            <div class="gallery-item">
-                                <img src="assets/portfolios/certilife/mobile_01.png" alt="인증서 수신화면 1" class="gallery-img">
-                            </div>
-                            <div class="gallery-item">
-                                <img src="assets/portfolios/certilife/mobile_02.png" alt="인증서 수신화면 2" class="gallery-img">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 추가 프로젝트: 환자용 웹페이지 -->
-                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="500">
-                    <div class="portfolio-header">
-                        <h3 class="portfolio-title">환자용 웹페이지</h3>
-                        <span class="company-tag">서티라이프</span>
-                    </div>
-                    
-                    <div class="portfolio-content">
-                        <div class="portfolio-desc">
-                            <h4>프로젝트 개요</h4>
-                            <p>서티라이프 서비스의 병원 방문자(환자) 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 인증서 수신화면에서 '인증서 자세히 보기' 버튼 클릭 후 진입하는 화면입니다.</p>
-                            
-                            <h4>주요 기여</h4>
-                            <ul class="feature-list">
-                                <li class="feature-item">카카오톡 로그인 개발(FE, BE)</li>
-                                <li class="feature-item">주도적 카카오톡 로그인 도입 추진 및 개인정보 수집 전략 수립</li>
-                                <li class="feature-item">카카오 로그인 기반의 원클릭 회원가입/로그인 플로우 개발</li>
-                            </ul>
-                            
-                            <div class="tech-stack">
-                                <h4>사용 기술</h4>
-                                <div class="tech-tags">
-                                    <span class="tech-tag">Vue.js</span>
-                                    <span class="tech-tag">NestJS</span>
-                                    <span class="tech-tag">Kakao SDK</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="portfolio-gallery">
-                        <h4>서비스 스크린샷</h4>
-                        
-                        <div class="gallery-grid">
-                            <div class="gallery-item">
-                                <img src="assets/portfolios/certilife/customer_01.png" alt="환자용 웹페이지 1" class="gallery-img">
-                            </div>
-                            <div class="gallery-item">
-                                <img src="assets/portfolios/certilife/customer_02.png" alt="환자용 웹페이지 2" class="gallery-img">
-                            </div>
-                            <div class="gallery-item">
-                                <img src="assets/portfolios/certilife/customer_03.png" alt="환자용 웹페이지 3" class="gallery-img">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 프로젝트: 밀림엑스 웹앱 -->
-                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="600">
-                    <div class="portfolio-header">
-                        <h3 class="portfolio-title">Millim:x Web</h3>
-                        <span class="company-tag">뮤짓</span>
-                    </div>
-                    
-                    <div class="portfolio-content">
-                        <div class="portfolio-desc">
-                            <h4>프로젝트 개요</h4>
-                            <p>블록체인 기술을 활용한 음악 NFT 거래 플랫폼의 웹 버전으로, React와 MobX를 활용해 구현되었습니다. 앱과 공통 API를 사용하며 일부 웹 전용 API가 추가되었습니다.</p>
-                            
-                            <h4>주요 기여</h4>
-                            <ul class="feature-list">
-                                <li class="feature-item">퍼블리싱 외주팀으로부터 전달받은 프로젝트에서 프론트엔드 개발 담당</li>
-                                <li class="feature-item">랜딩페이지 데이터 등 웹 전용 API 개발</li>
-                                <li class="feature-item">메타마스크를 이용한 블록체인 통신 기능 구현</li>
-                                <li class="feature-item">음원 NFT 민팅 및 거래 관련 기능 개발</li>
-                                <li class="feature-item">사용자 친화적 UI/UX 개선 작업</li>
-                            </ul>
-                            
-                            <div class="tech-stack">
-                                <h4>사용 기술</h4>
-                                <div class="tech-tags">
-                                    <span class="tech-tag">React</span>
-                                    <span class="tech-tag">MobX</span>
-                                    <span class="tech-tag">JavaScript</span>
-                                    <span class="tech-tag">Web3.js</span>
-                                    <span class="tech-tag">NestJS</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="portfolio-gallery">
-                        <h4>서비스 스크린샷</h4>
-                        
-                        <div class="category-section">
-                            <div class="category-label">메인 페이지</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/web_01.png" alt="메인 페이지 1" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/web_02.png" alt="메인 페이지 2" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="category-section">
-                            <div class="category-label">NFT 마켓</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/web_03.png" alt="NFT 마켓 1" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/web_04.png" alt="NFT 마켓 2" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/web_05.png" alt="NFT 마켓 3" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="category-section">
-                            <div class="category-label">사용자 프로필</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/web_06.png" alt="사용자 프로필" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 프로젝트: 밀림엑스 앱 -->
-                <div class="portfolio-item" data-aos="fade-up" data-aos-delay="700">
-                    <div class="portfolio-header">
-                        <h3 class="portfolio-title">Millim:x App</h3>
-                        <span class="company-tag">뮤짓</span>
-                    </div>
-                    
-                    <div class="portfolio-content">
-                        <div class="portfolio-desc">
-                            <h4>프로젝트 개요</h4>
-                            <p>블록체인 기반 음원 스트리밍 앱으로, Flutter를 사용하여 개발되었습니다. NestJS와 TypeORM을 활용한 백엔드 API와 연동되며, AWS EC2 및 S3를 활용하여 서비스가 배포되었습니다.</p>
-                            
-                            <h4>주요 기여</h4>
-                            <ul class="feature-list">
-                                <li class="feature-item">앱 UI 제작(Flutter)</li>
-                                <li class="feature-item">API 응답 처리 및 데이터 바인딩</li>
-                                <li class="feature-item">백엔드 API 제작(NodeJS/NestJS, TypeORM)</li>
-                                <li class="feature-item">백엔드 서버 배포 및 프로세스 개선(EC2, PM2 > Docker, Jenkins)</li>
-                                <li class="feature-item">인앱구매 프로세스 전체 구현(백엔드 제외)</li>
-                                <li class="feature-item">클로즈/오픈 베타테스트 버그 및 개선사항 조치</li>
-                                <li class="feature-item">앱 심사 등록(구글 플레이스토어, 애플 앱스토어)</li>
-                            </ul>
-                            
-                            <div class="tech-stack">
-                                <h4>사용 기술</h4>
-                                <div class="tech-tags">
-                                    <span class="tech-tag">Flutter</span>
-                                    <span class="tech-tag">Dart</span>
-                                    <span class="tech-tag">NestJS</span>
-                                    <span class="tech-tag">TypeORM</span>
-                                    <span class="tech-tag">AWS (EC2, S3)</span>
-                                    <span class="tech-tag">RevenueCat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="portfolio-gallery">
-                        <h4>서비스 스크린샷</h4>
-                        
-                        <div class="category-section">
-                            <div class="category-label">메인 화면</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/app_01.png" alt="메인 화면 1" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/app_02.png" alt="메인 화면 2" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/app_03.png" alt="메인 화면 3" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="category-section">
-                            <div class="category-label">플레이어 및 컬렉션</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/app_04.png" alt="음악 플레이어" class="gallery-img">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/app_05.png" alt="NFT 컬렉션" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="category-section">
-                            <div class="category-label">프로필 및 설정</div>
-                            <div class="gallery-grid">
-                                <div class="gallery-item">
-                                    <img src="assets/portfolios/musit/app_06.png" alt="프로필 화면" class="gallery-img">
-                                </div>
-                            </div>
-                        </div>
+                        </template>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- 기술 스택 섹션 -->
         <section id="skills">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">기술 스택</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">실무에서 사용한 기술과 툴을 소개합니다.</p>
+                <h2 class="section-title">{{ skillsSection.title }}</h2>
+                <p class="section-subtitle">{{ skillsSection.subtitle }}</p>
                 
                 <div class="skill-grid">
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="skill-name">백엔드 기술</div>
+                    <div class="skill-card" 
+                         v-for="(category, index) in skillsSection.categories" 
+                         :key="index">
+                        <div class="skill-name">{{ category.name }}</div>
                         <ul class="skill-list">
-                            <li class="skill-item"><span class="skill-dot"></span>Node.js / TypeScript</li>
-                            <li class="skill-item"><span class="skill-dot"></span>NestJS</li>
-                            <li class="skill-item"><span class="skill-dot"></span>Express</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
-                        <div class="skill-name">데이터베이스</div>
-                        <ul class="skill-list">
-                            <li class="skill-item"><span class="skill-dot"></span>MongoDB / Mongoose</li>
-                            <li class="skill-item"><span class="skill-dot"></span>MySQL / TypeORM</li>
-                            <li class="skill-item"><span class="skill-dot"></span>Redis</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="skill-name">인프라 및 클라우드</div>
-                        <ul class="skill-list">
-                            <li class="skill-item"><span class="skill-dot"></span>Azure</li>
-                            <li class="skill-item"><span class="skill-dot"></span>AWS (EC2, S3)</li>
-                            <li class="skill-item"><span class="skill-dot"></span>Docker</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="250">
-                        <div class="skill-name">프론트엔드 및 기타</div>
-                        <ul class="skill-list">
-                            <li class="skill-item"><span class="skill-dot"></span>Vue.js</li>
-                            <li class="skill-item"><span class="skill-dot"></span>React</li>
-                            <li class="skill-item"><span class="skill-dot"></span>블록체인 (ERC-721A)</li>
+                            <li class="skill-item" v-for="(skill, skillIndex) in category.skills" :key="skillIndex">
+                                <span class="skill-dot"></span>{{ skill }}
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- 학력 및 자격증 섹션 -->
         <section id="education">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">학력 및 자격증</h2>           
+                <h2 class="section-title">{{ educationSection.title }}</h2>           
                 <div class="skill-grid">
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="skill-name">학력</div>
-                        <div class="edu-item">
-                            <div class="edu-school">한국외국어대학교</div>
-                            <div class="edu-period">2009.03 - 2018.02</div>
-                            <div class="edu-major">스칸디나비아어 전공</div>
-                            <div class="edu-major">경제학 부전공</div>
+                    <div class="skill-card" 
+                         v-for="(category, index) in educationSection.categories" 
+                         :key="index">
+                        <div class="skill-name">{{ category.name }}</div>
+                        <div class="edu-item" v-if="category.type === 'education'" v-for="(edu, eduIndex) in category.items" :key="'edu-'+eduIndex">
+                            <div class="edu-school">{{ edu.school }}</div>
+                            <div class="edu-period">{{ edu.period }}</div>
+                            <div class="edu-major" v-for="(major, majorIndex) in edu.majors" :key="'major-'+majorIndex">{{ major }}</div>
+                            <p class="edu-description" v-if="edu.description">{{ edu.description }}</p>
                         </div>
-                    </div>
-                    
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
-                        <div class="skill-name">교육 과정</div>
-                        <div class="edu-item">
-                            <div class="edu-school">경일게임아카데미</div>
-                            <div class="edu-period">2021.12</div>
-                            <div class="edu-major">블록체인 개발자 양성과정</div>
-                            <p class="edu-description">HTML, CSS, JavaScript, React, MySQL, Solidity 등 학습</p>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="skill-name">자격증</div>
-                        <div class="cert-item">
-                            <div class="cert-name">정보처리기사</div>
-                            <div class="cert-date">2024.09</div>
-                        </div>
-                        <div class="cert-item">
-                            <div class="cert-name">프롬프트엔지니어1급</div>
-                            <div class="cert-date">2025.05</div>
+                        <div class="cert-item" v-if="category.type === 'certificate'" v-for="(cert, certIndex) in category.items" :key="'cert-'+certIndex">
+                            <div class="cert-name">{{ cert.name }}</div>
+                            <div class="cert-date">{{ cert.date }}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- 연락처 섹션 -->
         <section id="contact">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">연락처</h2>
-                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">언제든지 연락주세요.</p>
+                <h2 class="section-title">{{ contactSection.title }}</h2>
+                <p class="section-subtitle">{{ contactSection.subtitle }}</p>
                 <div class="skill-grid">
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="skill-name">이메일</div>
-                        <p><a href="mailto:dfassf@naver.com" class="contact-link">dfassf@naver.com</a></p>
-                    </div>
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="150">
-                        <div class="skill-name">연락처</div>
-                        <p><a href="tel:+821041409225" class="contact-link">010-4140-9225</a></p>
-                    </div>
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="skill-name">GitHub</div>
-                        <p><a href="https://github.com/dfassf" target="_blank" class="contact-link">https://github.com/dfassf</a></p>
-                    </div>
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="250">
-                        <div class="skill-name">Notion</div>
-                        <p><a href="https://gainful-tarn-9ef.notion.site/962545f9df544085a62a17f4056197da" target="_blank" class="contact-link">Link</a></p>
+                    <div class="skill-card" 
+                         v-for="(item, index) in contactSection.items" 
+                         :key="index">
+                        <div class="skill-name">{{ item.name }}</div>
+                        <p><a :href="item.url" :target="item.external ? '_blank' : null" class="contact-link">{{ item.display }}</a></p>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- 이미지 모달 -->
         <div class="image-modal" v-if="isModalVisible" @click="closeModal">
             <div class="modal-content" @click.stop>
                 <img :src="modalImage" alt="확대된 이미지" class="modal-image" @click="openImageInNewTab">
                 <button class="modal-close" @click="closeModal">&times;</button>
             </div>
         </div>
-        
-        <!-- 최상단 이동 버튼 -->
         <div class="scroll-top-btn" :class="{ 'visible': scrolled }" @click="scrollToTop">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.3"/>
-                <path d="M8 14L12 10L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <img src="assets/icons/arrow-up.svg" alt="위로 스크롤" width="24" height="24">
         </div>
-        
-        <!-- 푸터 -->
         <footer class="footer">
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-logo" @click="scrollToTop">
                         <span>엄신우 포트폴리오</span>
                     </div>
-                    
                     <div class="footer-links">
                         <div class="footer-social">
                             <a href="https://github.com/dfassf" target="_blank" class="social-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 2C6.477 2 2 6.477 2 12C2 16.418 4.865 20.166 8.839 21.489C9.339 21.581 9.5 21.278 9.5 21.012C9.5 20.777 9.492 20.014 9.489 19.181C6.727 19.792 6.139 17.949 6.139 17.949C5.684 16.811 5.019 16.509 5.019 16.509C4.097 15.895 5.086 15.908 5.086 15.908C6.108 15.976 6.636 16.92 6.636 16.92C7.545 18.421 9.007 18.007 9.516 17.751C9.609 17.116 9.876 16.703 10.171 16.419C7.958 16.13 5.631 15.278 5.631 11.469C5.631 10.337 6.013 9.406 6.656 8.669C6.54 8.416 6.2 7.443 6.756 6.088C6.756 6.088 7.617 5.818 9.456 7.061C10.268 6.844 11.131 6.735 11.994 6.731C12.857 6.735 13.72 6.844 14.532 7.061C16.371 5.818 17.232 6.088 17.232 6.088C17.788 7.443 17.448 8.416 17.332 8.669C17.975 9.406 18.357 10.337 18.357 11.469C18.357 15.289 16.026 16.126 13.806 16.409C14.171 16.763 14.5 17.466 14.5 18.531C14.5 20.046 14.488 20.677 14.488 21.008C14.488 21.27 14.639 21.577 15.159 21.475C19.158 20.168 22 16.416 22 12C22 6.477 17.523 2 12 2Z" fill="currentColor"/>
-                                </svg>
+                                <img src="assets/icons/github.svg" alt="GitHub" width="20" height="20">
                             </a>
                             <a href="mailto:dfassf@naver.com" class="social-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="currentColor"/>
-                                </svg>
+                                <img src="assets/icons/email.svg" alt="Email" width="20" height="20">
                             </a>
                             <a href="https://gainful-tarn-9ef.notion.site/962545f9df544085a62a17f4056197da" target="_blank" class="social-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4.5 7.5C4.5 6.67157 5.17157 6 6 6H7.5C8.32843 6 9 6.67157 9 7.5V9C9 9.82843 8.32843 10.5 7.5 10.5H6C5.17157 10.5 4.5 9.82843 4.5 9V7.5Z" fill="currentColor"/>
-                                    <path d="M12 4.5H19.5C20.3284 4.5 21 5.17157 21 6V7.5C21 8.32843 20.3284 9 19.5 9H12V4.5Z" fill="currentColor"/>
-                                    <path d="M12 10.5H19.5C20.3284 10.5 21 11.1716 21 12V13.5C21 14.3284 20.3284 15 19.5 15H12V10.5Z" fill="currentColor"/>
-                                    <path d="M12 16.5H19.5C20.3284 16.5 21 17.1716 21 18V19.5C21 20.3284 20.3284 21 19.5 21H12V16.5Z" fill="currentColor"/>
-                                    <path d="M4.5 13.5C4.5 12.6716 5.17157 12 6 12H7.5C8.32843 12 9 12.6716 9 13.5V15C9 15.8284 8.32843 16.5 7.5 16.5H6C5.17157 16.5 4.5 15.8284 4.5 15V13.5Z" fill="currentColor"/>
-                                    <path d="M4.5 19.5C4.5 18.6716 5.17157 18 6 18H7.5C8.32843 18 9 18.6716 9 19.5V21C9 21.8284 8.32843 22.5 7.5 22.5H6C5.17157 22.5 4.5 21.8284 4.5 21V19.5Z" fill="currentColor"/>
-                                </svg>
+                                <img src="assets/icons/notion.svg" alt="Notion" width="20" height="20">
                             </a>
                         </div>
                     </div>
-                    
                     <div class="footer-bottom">
                         <p class="copyright">© 2025 엄신우. All rights reserved.</p>
+                        <p class="powered-by">Powered by <a href="https://github.com/dfassf" target="_blank">Shinwoo Um</a></p>
                     </div>
                 </div>
             </div>
         </footer>
     </div>
-
     <script>
-        // Vue 인스턴스 생성
         const app = new Vue({
             el: '#app',
             data: {
@@ -810,17 +269,456 @@
                 headerScrolled: false,
                 typingText: '4년차 Node.js 백엔드 개발자',
                 typingIndex: 0,
-                isTyping: false
+                isTyping: false,
+                activeSection: 'home',
+                scrollY: 0,
+                sectionOffsets: {},
+                contents: {
+                    hero: {
+                        tag: '백엔드 개발자',
+                        title: '초기 설계부터 운영까지 경험한',
+                        description: [
+                            '4년차 백엔드 중심의 풀스택 개발자로, NestJS 기반의 서버 아키텍처 설계와 도메인 모델링에 강점을 가지고 있습니다.',
+                            '인증서 발행량 30만건, 카카오톡 채널 친구 1만 5천명에 달하는 서비스의 초기 개발부터 운영, 리팩토링, 마이그레이션까지 전 주기 경험을 보유하고 있으며, 기술 부채 해소와 구조적 개선을 통해 시스템 안정성과 비용 효율을 실질적으로 개선한 경험이 있습니다.',
+                            '도메인 요구사항을 빠르게 파악하고, 기획자 및 외부 서비스 담당자와의 긴밀한 협업을 통해 문제를 구체화하고 해결해나가는 데 익숙합니다.',
+                            '유지보수성과 생산성을 동시에 고려한 설계와 구현, 그리고 사용자 경험까지 아우르는 사고로 팀과 서비스에 기여해왔습니다.'
+                        ],
+                        contactButtonText: '연락하기'
+                    },
+                    about: {
+                        title: '소개',
+                        subtitle: '백엔드 개발에 풀스택 경험을 활용해요.',
+                        paragraphs: [
+                            '프론트엔드 중심 풀스택 개발자로 커리어를 시작했지만 서티라이프에서 백엔드 설계 및 개발을 담당하게 되며 백엔드에 더 큰 전문성을 가지게 되었습니다. 약 2년간 의료 인증서 발행 서비스의 초기 개발부터 참여하여 30만 건 이상의 인증서 발행과 1만 5천 명 이상의 카카오 로그인 회원을 보유한 안정적인 서비스가 될 때까지 운영에 참여하였습니다.',
+                            'NestJS, MongoDB, TypeScript를 주력으로 사용하며, 클린 코드와 유지보수성 높은 아키텍처 설계에 중점을 둡니다. 프론트엔드 개발 경험을 통해 API 설계 시 화면단에서의 데이터 사용성과 효율성을 고려할 수 있는 것이 저의 강점입니다.',
+                            '기획자와 소통하며 기능의 사용성과 쓰임새에 대해 늘 고민하는 것이 습관화 되어있으며, 팀 내에서 기술적 의사결정과 문제 해결에 적극적으로 참여하는 개발자가 되고자 합니다.'
+                        ]
+                    },
+                    experience: {
+                        title: '경력',
+                        subtitle: '실무에서의 역할과 문제 해결 경험을 소개해요.',
+                        companies: [
+                            {
+                                name: '서티라이프',
+                                logoSrc: 'assets/company_logos/certilife.webp',
+                                duration: '2023.04 - 2025.05(2년 2개월)',
+                                position: '백엔드 중심 풀스택 개발자',
+                                description: '30만 건 이상의 인증서를 발행한 의료 인증서 플랫폼으로, 병원과 환자 간 디지털 의료 인증서를 제공하며 제조사와 환자의 연결고리를 만들어 주는 서비스입니다. 초기 프론트엔드, 백엔드 개발부터 안정적인 운영까지 핵심 개발자로 참여했습니다.',
+                                roles: [
+                                    '병원 관리자, 제조사 관리자, 인증서 수신화면, 어드민 페이지 개발 및 유지보수',
+                                    '커스텀 인증서 발행/템플릿 관리, 이벤트 및 전자계약 등 주요 도메인 풀스택 개발 및 고도화',
+                                    'MongoDB 기반의 도메인 모델링, 인증 및 알림 관련 API 개발 및 자동화 작업 수행',
+                                    '알림톡 관련 기능 유지보수 및 리팩토링',
+                                    '카카오클라우드 → Azure 이전 작업 지원'
+                                ],
+                                achievements: [
+                                    '자체 전자계약 기능 구현으로 연간 약 400만 원 외부 서비스 비용 절감',
+                                    '인증서 발행량 약 30만 건 달성, 카카오 채널 유입자 수 15,000명 확보',
+                                    'Azure Static Web App 및 Vite 도입을 통해 연간 약 60만 원 인프라 비용 절감',
+                                    '무한 계층 카테고리 구조 도입으로 인증서 관리 유연성 개선',
+                                    '지속적인 리팩토링을 통해 유지보수성 향상 및 오류 발생률 감소'
+                                ],
+                                keyExperiences: [
+                                    {
+                                        title: '서비스 초기 개발 및 시스템 안정화',
+                                        details: [
+                                            '기존 외주팀이 구현한 Express 기반 프로젝트를 NestJS로 마이그레이션하여 가독성과 확장성 향상, 타 개발자 협업 환경 개선',
+                                            'Bootstrap 기반 스타일 충돌 문제를 직접 구현 방식으로 대체하여 운영 환경 안정성 확보',
+                                            '웹팩 기반 레거시 관리자 프로젝트를 Vite로 전환, 빌드 시간 약 40% 단축'
+                                        ]
+                                    },
+                                    {
+                                        title: '핵심 기능 구조화 및 운영 효율 개선',
+                                        details: [
+                                            '고정된 인증서 구조를 무한 카테고리 기반 설계로 변경, 다양한 케이스에 유연하게 대응',
+                                            '외부 API 장애 영향을 줄이기 위해 내부 DB 우선 조회 및 서비스 제공자 분기 처리, 연간 약 400만원 비용 절감',
+                                            '카카오 개인정보 수집 항목 재정비 및 심사 통과, 신규 로그인 기능 도입으로 플러스 친구 약 1.5만 명 유입'
+                                        ]
+                                    },
+                                    {
+                                        title: '레거시 개선 및 리팩토링',
+                                        details: [
+                                            '단일 책임 원칙 기반으로 인증서 발행 로직 기능 분리, 사이드 이펙트 제거 및 QA 작업 간소화'
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                name: '뮤짓',
+                                logoSrc: 'assets/company_logos/musit.webp',
+                                duration: '2022.02 - 2023.04(1년 3개월)',
+                                position: '프론트엔드 중심 풀스택 개발자',
+                                description: '블록체인 기술을 활용한 음악 NFT 거래 플랫폼으로, Play 2 Earn을 모토로 한 서비스입니다. 앱, 웹페이지, 백엔드 API, 스마트 컨트랙트 부분 개발을 주로 담당했습니다.',
+                                roles: [
+                                    '서비스 앱 제작',
+                                    '서비스 웹 버전 제작',
+                                    '앱/웹에서 필요한 API 제작',
+                                    'NFT 민팅 서버 및 API 구축, 클라우드 인프라 배포',
+                                    'NFT 민팅, 화이트리스트 민팅 페이지 제작'
+                                ],
+                                achievements: [
+                                    '자체 NFT 민팅 웹앱 개발 및 출시, ERC-721A 도입으로 가스비 최적화',
+                                    'Flutter 기반 앱 프로토타입 5일 내 구현'
+                                ],
+                                keyExperiences: [
+                                    {
+                                        title: '긴급 프로토타입 제작',
+                                        details: [
+                                            '외주 앱 폐기 후 5일 내 시연용 앱을 Flutter로 직접 제작, 빠른 의사결정과 실행으로 시연 일정 차질 없이 완료'
+                                        ]
+                                    },
+                                    {
+                                        title: 'NFT 민팅 가스비 최적화',
+                                        details: [
+                                            'ERC-721A 도입 및 메타데이터 외부 저장 구조로 전환하여 NFT 100개 민팅 시 가스비 90% 절감 ($900 → $80 수준)'
+                                        ]
+                                    },
+                                    {
+                                        title: 'Millim:x 앱 개발',
+                                        details: [
+                                            'Flutter 기반 앱 개발, 음악 플레이어 기능 및 NFT 거래소 기능 구현',
+                                            '인앱 결제 구현'
+                                        ]
+                                    },
+                                    {
+                                        title: 'Millim:x 웹 버전 프론트엔드 제작',
+                                        details: [
+                                            '메타마스크 지갑 연결, 스마트컨트랙트 통신 기능 등 앱에서 제공되는 모든 기능 구현'
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    portfolio: {
+                        title: '포트폴리오',
+                        subtitle: '다양한 서비스를 개발했어요. 스크린샷을 클릭하면 확대해서 볼 수 있어요.',
+                        projects: [
+                            {
+                                title: '병원관리자 웹페이지',
+                                company: '서티라이프',
+                                overview: '서티라이프 서비스의 병원 사용자 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 병원과 제조사를 연결하는 인증서 관리 플랫폼으로, 환자 정보와 인증서 발행을 효율적으로 관리할 수 있는 시스템입니다.',
+                                contributions: [
+                                    '초기 화면 전체 개발(FE)',
+                                    '인증서 수신화면 병원 프로젝트에서 분리(FE)',
+                                    '치과 인증서 발행 페이지 리팩토링(FE)',
+                                    '커스텀 인증서 고도화(FE, BE) - 무한 카테고리 개념 도입',
+                                    'OpenAI API 사용한 번역 기능 추가',
+                                    '레거시 Bootstrap 제거 후 자체 CSS로 전환'
+                                ],
+                                technologies: ['Vue.js', 'NestJS', 'MongoDB'],
+                                galleryTitle: '주요 기능 스크린샷',
+                                categories: [
+                                    {
+                                        name: '인증서 발행 및 설정',
+                                        images: [
+                                            { src: 'assets/portfolios/certilife/hospital_01.png', alt: '인증서 발행 및 설정 1' },
+                                            { src: 'assets/portfolios/certilife/hospital_02.png', alt: '인증서 발행 및 설정 2' },
+                                            { src: 'assets/portfolios/certilife/hospital_03.png', alt: '인증서 발행 및 설정 3' }
+                                        ]
+                                    },
+                                    {
+                                        name: '시술동의서 및 계약서',
+                                        images: [
+                                            { src: 'assets/portfolios/certilife/hospital_04.png', alt: '시술동의서' },
+                                            { src: 'assets/portfolios/certilife/hospital_05.png', alt: '근로계약서' }
+                                        ]
+                                    },
+                                    {
+                                        name: 'QR로그인 및 앱 다운로드',
+                                        images: [
+                                            { src: 'assets/portfolios/certilife/hospital_06.png', alt: 'QR로그인' }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                title: '제조사 관리자 웹페이지',
+                                company: '서티라이프',
+                                overview: '서티라이프 서비스의 제조사 사용자 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 제조사와 병원 간의 계약 관리 및 이벤트 데이터 분석을 위한 대시보드를 제공합니다.',
+                                contributions: [
+                                    '조회 화면 전체 개발(FE)',
+                                    '전자계약 마이그레이션(FE, BE) - 서드파티 의존성 감소',
+                                    '이벤트 대시보드 개발(FE, BE)',
+                                    '서버리스 함수로 배치 구성'
+                                ],
+                                technologies: ['Vue.js', 'NestJS', 'MongoDB'],
+                                galleryTitle: '주요 기능 스크린샷',
+                                categories: [
+                                    {
+                                        name: '전자계약',
+                                        images: [
+                                            { src: 'assets/portfolios/certilife/manufacturer_01.png', alt: '전자계약' }
+                                        ]
+                                    },
+                                    {
+                                        name: '이벤트 대시보드',
+                                        images: [
+                                            { src: 'assets/portfolios/certilife/manufacturer_02.png', alt: '이벤트 대시보드 1' },
+                                            { src: 'assets/portfolios/certilife/manufacturer_03.png', alt: '이벤트 대시보드 2' }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                title: '인증서 수신화면 페이지',
+                                company: '서티라이프',
+                                overview: '서티라이프 서비스의 병원 방문자(환자) 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 인증서 발행 후 알림톡 버튼을 통해 진입하는 화면입니다.',
+                                contributions: [
+                                    '클립 연동',
+                                    '랜딩 속도 약 77% 개선'
+                                ],
+                                technologies: ['Vue.js', 'Kakao SDK'],
+                                galleryTitle: '서비스 스크린샷',
+                                images: [
+                                    { src: 'assets/portfolios/certilife/mobile_01.png', alt: '인증서 수신화면 1' },
+                                    { src: 'assets/portfolios/certilife/mobile_02.png', alt: '인증서 수신화면 2' }
+                                ]
+                            },
+                            {
+                                title: '환자용 웹페이지',
+                                company: '서티라이프',
+                                overview: '서티라이프 서비스의 병원 방문자(환자) 대상 웹페이지로, Vue 3.0 기반으로 개발되었습니다. 인증서 수신화면에서 \'인증서 자세히 보기\' 버튼 클릭 후 진입하는 화면입니다.',
+                                contributions: [
+                                    '카카오톡 로그인 개발(FE, BE)',
+                                    '주도적 카카오톡 로그인 도입 추진 및 개인정보 수집 전략 수립',
+                                    '카카오 로그인 기반의 원클릭 회원가입/로그인 플로우 개발'
+                                ],
+                                technologies: ['Vue.js', 'NestJS', 'Kakao SDK'],
+                                galleryTitle: '서비스 스크린샷',
+                                images: [
+                                    { src: 'assets/portfolios/certilife/customer_01.png', alt: '환자용 웹페이지 1' },
+                                    { src: 'assets/portfolios/certilife/customer_02.png', alt: '환자용 웹페이지 2' },
+                                    { src: 'assets/portfolios/certilife/customer_03.png', alt: '환자용 웹페이지 3' }
+                                ]
+                            },
+                            {
+                                title: 'Millim:x Web',
+                                company: '뮤짓',
+                                overview: '블록체인 기술을 활용한 음악 NFT 거래 플랫폼의 웹 버전으로, React와 MobX를 활용해 구현되었습니다. 앱과 공통 API를 사용하며 일부 웹 전용 API가 추가되었습니다.',
+                                contributions: [
+                                    '퍼블리싱 외주팀으로부터 전달받은 프로젝트에서 프론트엔드 개발 담당',
+                                    '랜딩페이지 데이터 등 웹 전용 API 개발',
+                                    '메타마스크를 이용한 블록체인 통신 기능 구현',
+                                    '음원 NFT 민팅 및 거래 관련 기능 개발',
+                                    '사용자 친화적 UI/UX 개선 작업'
+                                ],
+                                technologies: ['React', 'MobX', 'JavaScript', 'Web3.js', 'NestJS'],
+                                galleryTitle: '서비스 스크린샷',
+                                categories: [
+                                    {
+                                        name: '메인 페이지',
+                                        images: [
+                                            { src: 'assets/portfolios/musit/web_01.png', alt: '메인 페이지 1' },
+                                            { src: 'assets/portfolios/musit/web_02.png', alt: '메인 페이지 2' }
+                                        ]
+                                    },
+                                    {
+                                        name: 'NFT 마켓',
+                                        images: [
+                                            { src: 'assets/portfolios/musit/web_03.png', alt: 'NFT 마켓 1' },
+                                            { src: 'assets/portfolios/musit/web_04.png', alt: 'NFT 마켓 2' },
+                                            { src: 'assets/portfolios/musit/web_05.png', alt: 'NFT 마켓 3' }
+                                        ]
+                                    },
+                                    {
+                                        name: '사용자 프로필',
+                                        images: [
+                                            { src: 'assets/portfolios/musit/web_06.png', alt: '사용자 프로필' }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                title: 'Millim:x App',
+                                company: '뮤짓',
+                                overview: '블록체인 기반 음원 스트리밍 앱으로, Flutter를 사용하여 개발되었습니다. NestJS와 TypeORM을 활용한 백엔드 API와 연동되며, AWS EC2 및 S3를 활용하여 서비스가 배포되었습니다.',
+                                contributions: [
+                                    '앱 UI 제작(Flutter)',
+                                    'API 응답 처리 및 데이터 바인딩',
+                                    '백엔드 API 제작(NodeJS/NestJS, TypeORM)',
+                                    '백엔드 서버 배포 및 프로세스 개선(EC2, PM2 > Docker, Jenkins)',
+                                    '인앱구매 프로세스 전체 구현(백엔드 제외)',
+                                    '클로즈/오픈 베타테스트 버그 및 개선사항 조치',
+                                    '앱 심사 등록(구글 플레이스토어, 애플 앱스토어)'
+                                ],
+                                technologies: ['Flutter', 'Dart', 'NestJS', 'TypeORM', 'AWS (EC2, S3)', 'RevenueCat'],
+                                galleryTitle: '서비스 스크린샷',
+                                categories: [
+                                    {
+                                        name: '메인 화면',
+                                        images: [
+                                            { src: 'assets/portfolios/musit/app_01.png', alt: '메인 화면 1' },
+                                            { src: 'assets/portfolios/musit/app_02.png', alt: '메인 화면 2' },
+                                            { src: 'assets/portfolios/musit/app_03.png', alt: '메인 화면 3' }
+                                        ]
+                                    },
+                                    {
+                                        name: '플레이어 및 컬렉션',
+                                        images: [
+                                            { src: 'assets/portfolios/musit/app_04.png', alt: '음악 플레이어' },
+                                            { src: 'assets/portfolios/musit/app_05.png', alt: 'NFT 컬렉션' }
+                                        ]
+                                    },
+                                    {
+                                        name: '프로필 및 설정',
+                                        images: [
+                                            { src: 'assets/portfolios/musit/app_06.png', alt: '프로필 화면' }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    skills: {
+                        title: '기술 스택',
+                        subtitle: '실무에서 사용한 기술과 툴을 소개합니다.',
+                        categories: [
+                            {
+                                name: '백엔드 기술',
+                                skills: [
+                                    'Node.js / TypeScript',
+                                    'NestJS',
+                                    'Express'
+                                ]
+                            },
+                            {
+                                name: '데이터베이스',
+                                skills: [
+                                    'MongoDB / Mongoose',
+                                    'MySQL / TypeORM',
+                                    'Redis'
+                                ]
+                            },
+                            {
+                                name: '인프라 및 클라우드',
+                                skills: [
+                                    'Azure',
+                                    'AWS (EC2, S3)',
+                                    'Docker'
+                                ]
+                            },
+                            {
+                                name: '프론트엔드 및 기타',
+                                skills: [
+                                    'Vue.js',
+                                    'React',
+                                    '블록체인 (ERC-721A)'
+                                ]
+                            }
+                        ]
+                    },
+                    education: {
+                        title: '학력 및 자격증',
+                        categories: [
+                            {
+                                name: '학력',
+                                type: 'education',
+                                items: [
+                                    {
+                                        school: '한국외국어대학교',
+                                        period: '2009.03 - 2018.02',
+                                        majors: [
+                                            '스칸디나비아어 전공',
+                                            '경제학 부전공'
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                name: '교육 과정',
+                                type: 'education',
+                                items: [
+                                    {
+                                        school: '경일게임아카데미',
+                                        period: '2021.12',
+                                        majors: [
+                                            '블록체인 개발자 양성과정'
+                                        ],
+                                        description: 'HTML, CSS, JavaScript, React, MySQL, Solidity 등 학습'
+                                    }
+                                ]
+                            },
+                            {
+                                name: '자격증',
+                                type: 'certificate',
+                                items: [
+                                    {
+                                        name: '정보처리기사',
+                                        date: '2024.09'
+                                    },
+                                    {
+                                        name: '프롬프트엔지니어1급',
+                                        date: '2025.05'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    contact: {
+                        title: '연락처',
+                        subtitle: '언제든지 연락주세요.',
+                        items: [
+                            {
+                                name: '이메일',
+                                url: 'mailto:dfassf@naver.com',
+                                display: 'dfassf@naver.com',
+                                external: false
+                            },
+                            {
+                                name: '연락처',
+                                url: 'tel:+821041409225',
+                                display: '010-4140-9225',
+                                external: false
+                            },
+                            {
+                                name: 'GitHub',
+                                url: 'https://github.com/dfassf',
+                                display: 'https://github.com/dfassf',
+                                external: true
+                            },
+                            {
+                                name: 'Notion',
+                                url: 'https://gainful-tarn-9ef.notion.site/962545f9df544085a62a17f4056197da',
+                                display: 'Link',
+                                external: true
+                            }
+                        ]
+                    }
+                }
+            },
+            computed: {
+                heroSection() {
+                    return this.contents.hero;
+                },
+                aboutSection() {
+                    return this.contents.about;
+                },
+                experienceSection() {
+                    return this.contents.experience;
+                },
+                portfolioSection() {
+                    return this.contents.portfolio;
+                },
+                skillsSection() {
+                    return this.contents.skills;
+                },
+                educationSection() {
+                    return this.contents.education;
+                },
+                contactSection() {
+                    return this.contents.contact;
+                }
             },
             methods: {
                 openModal(imageSrc) {
                     this.modalImage = imageSrc;
                     this.isModalVisible = true;
-                    document.body.style.overflow = 'hidden'; // 모달 열릴 때 스크롤 방지
+                    document.body.style.overflow = 'hidden';
                 },
                 closeModal() {
                     this.isModalVisible = false;
-                    document.body.style.overflow = ''; // 모달 닫힐 때 스크롤 복원
+                    document.body.style.overflow = '';
                 },
                 openImageInNewTab() {
                     window.open(this.modalImage, '_blank');
@@ -832,7 +730,6 @@
                     const x = event.clientX - btnRect.left;
                     const y = event.clientY - btnRect.top;
                     
-                    // 버튼 내부 리플 효과 추가 (토스 스타일의 미니멀한 리플)
                     const ripple = document.createElement('div');
                     ripple.style.position = 'absolute';
                     ripple.style.width = '5px';
@@ -845,7 +742,6 @@
                     ripple.style.pointerEvents = 'none';
                     btn.appendChild(ripple);
                     
-                    // 리플 애니메이션
                     gsap.to(ripple, {
                         scale: 25,
                         opacity: 0,
@@ -856,7 +752,6 @@
                         }
                     });
                     
-                    // 버튼 피드백 (토스 스타일 - 다이내믹한 피드백)
                     gsap.timeline()
                         .to(btn, {
                             scale: 0.93, 
@@ -874,7 +769,6 @@
                             ease: 'power2.out'
                         });
                     
-                    // 버튼 아이콘 효과
                     const btnIcon = btn.querySelector('.btn-icon');
                     gsap.timeline()
                         .to(btnIcon, {
@@ -891,47 +785,38 @@
                             ease: 'power2.out'
                         });
                     
-                    // 확장 원 효과 생성 (미니멀한 버전)
                     const circle = document.createElement('div');
                     circle.className = 'expanding-circle';
                     document.body.appendChild(circle);
                     
-                    // 원의 위치를 클릭 위치로 설정
                     circle.style.top = `${event.clientY}px`;
                     circle.style.left = `${event.clientX}px`;
                     
-                    // 원이 화면을 커버하기 위해 필요한 스케일 계산
                     const maxDim = Math.max(window.innerWidth, window.innerHeight);
-                    const scale = maxDim * 3 / 60; // 미니멀한 원 크기에 맞게 조정
+                    const scale = maxDim * 3 / 60;
                     
                     const contactSection = document.getElementById('contact');
                     
-                    // 원 확장 애니메이션 (토스 스타일 - 약간 더 활기찬 전환)
                     gsap.to(circle, {
                         scale: scale,
                         opacity: 1,
                         duration: 0.35,
                         ease: 'power2.inOut',
                         onComplete: () => {
-                            // 원이 완전히 확장되면 연락처 섹션으로 이동
                             if (contactSection) {
-                                // 스크롤 애니메이션 없이 바로 이동
                                 const sectionTop = contactSection.getBoundingClientRect().top + window.scrollY - 80;
                                 window.scrollTo({
                                     top: sectionTop,
                                     behavior: 'auto'
                                 });
                                 
-                                // 카드 애니메이션 효과 준비 (토스 스타일 - 약간 더 다이내믹한 슬라이드인)
                                 const cards = contactSection.querySelectorAll('.skill-card');
                                 cards.forEach((card) => {
                                     card.style.opacity = '0';
                                     card.style.transform = 'translateY(30px)';
                                 });
                                 
-                                // 부드러운 페이드아웃
                                 setTimeout(() => {
-                                    // 원 페이드아웃
                                     gsap.to(circle, {
                                         opacity: 0,
                                         duration: 0.4,
@@ -941,7 +826,6 @@
                                         }
                                     });
                                     
-                                    // 연락처 섹션 카드 애니메이션 (토스 스타일 - 순차적인 페이드인)
                                     cards.forEach((card, index) => {
                                         gsap.to(card, {
                                             y: 0, 
@@ -957,20 +841,53 @@
                     });
                 },
                 handleScroll() {
-                    // 헤더와 최상단 이동 버튼 가시성 설정
-                    const scrollY = window.scrollY;
-                    const headerThreshold = 50;
-                    const btnThreshold = 200;
+                    this.scrollY = window.scrollY;
                     
-                    // 헤더 스타일과 최상단 이동 버튼 업데이트
-                    this.headerScrolled = scrollY > headerThreshold;
-                    this.scrolled = scrollY > btnThreshold;
+                    this.headerScrolled = window.scrollY > 50;
+                    this.scrolled = window.scrollY > 300;
                     
-                    // 스크롤 프로그레스 바
                     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                    const scrolledPercent = (scrollTop / scrollHeight) * 100;
-                    document.getElementById('progressBar').style.width = scrolledPercent + '%';
+                    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+                    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+                    
+                    // 스크롤 진행률 계산 및 표시
+                    const scrollProgress = (scrollTop / (scrollHeight - clientHeight)) * 100;
+                    this.scrollProgress = scrollProgress;
+                    
+                    const progressBar = document.querySelector('.progress-bar');
+                    if (progressBar) {
+                        progressBar.style.width = `${scrollProgress}%`;
+                    }
+                    
+                    // 현재 보이는 섹션 감지
+                    this.detectVisibleSection();
+                    
+                    // 패럴랙스 효과
+                    if (this.$refs.parallaxBg) {
+                        const parallaxBg = this.$refs.parallaxBg;
+                        const translateY = scrollTop * 0.3;
+                        parallaxBg.style.transform = `translateY(${translateY}px)`;
+                    }
+                },
+                detectVisibleSection() {
+                    const sections = ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'];
+                    const offset = 150;
+                    
+                    if (window.scrollY < 100) {
+                        this.activeSection = 'home';
+                        return;
+                    }
+                    
+                    for (let i = sections.length - 1; i >= 0; i--) {
+                        const section = document.getElementById(sections[i]);
+                        if (section) {
+                            const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                            if (window.scrollY >= sectionTop - offset) {
+                                this.activeSection = sections[i];
+                                break;
+                            }
+                        }
+                    }
                 },
                 parallaxEffect() {
                     if (this.$refs.parallaxBg) {
@@ -980,7 +897,6 @@
                     }
                 },
                 startTyping() {
-                    // 타이핑 효과
                     if (this.$refs.typing) {
                         this.isTyping = true;
                         const text = this.typingText;
@@ -999,136 +915,93 @@
                         setTimeout(typeText, 500);
                     }
                 },
-                initAnimations() {
-                    // 다른 섹션들에 애니메이션 다시 적용
-                    const addAnimationToSection = (sectionId, delay = 0) => {
-                        // if (sectionId === 'experience') return; // 경력 섹션은 제외
+                scrollToTop() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    this.activeSection = 'home';
+                },
+                scrollToSection(sectionId) {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        const headerHeight = 60;
+                        const offset = 20;
+                        const totalOffset = headerHeight + offset;
                         
-                        const section = document.getElementById(sectionId);
-                        if (!section) return;
+                        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
                         
-                        // 섹션 제목에 애니메이션 추가
-                        const title = section.querySelector('.section-title');
-                        if (title) {
-                            title.setAttribute('data-aos', 'fade-up');
-                        }
+                        const scrollPosition = sectionTop - totalOffset;
                         
-                        // 섹션 서브타이틀에 애니메이션 추가
-                        const subtitle = section.querySelector('.section-subtitle');
-                        if (subtitle) {
-                            subtitle.setAttribute('data-aos', 'fade-up');
-                            subtitle.setAttribute('data-aos-delay', '100');
-                        }
+                        window.scrollTo({
+                            top: scrollPosition,
+                            behavior: 'smooth'
+                        });
                         
-                        // 콘텐츠에 애니메이션 추가
-                        if (sectionId === 'about') {
-                            const content = section.querySelector('.about-content');
-                            if (content) {
-                                content.setAttribute('data-aos', 'fade-up');
-                                content.setAttribute('data-aos-delay', '200');
-                            }
-                        }
-                        
-                        // 경력 섹션 애니메이션 추가
-                        if (sectionId === 'experience') {
-                            const expCards = section.querySelectorAll('.exp-card');
-                            expCards.forEach((card, index) => {
-                                card.setAttribute('data-aos', 'fade-up');
-                                card.setAttribute('data-aos-delay', `${200 + index * 100}`);
-                            });
-                        }
-                        
-                        // 포트폴리오 아이템에 애니메이션 추가
-                        if (sectionId === 'portfolio') {
-                            const items = section.querySelectorAll('.portfolio-item');
-                            items.forEach((item, index) => {
-                                item.setAttribute('data-aos', 'fade-up');
-                                item.setAttribute('data-aos-delay', `${200 + index * 100}`);
-                            });
-                        }
-                        
-                        // 스킬 카드에 애니메이션 추가
-                        if (sectionId === 'skills' || sectionId === 'education' || sectionId === 'contact') {
-                            const items = section.querySelectorAll('.skill-card');
-                            items.forEach((item, index) => {
-                                item.setAttribute('data-aos', 'fade-up');
-                                item.setAttribute('data-aos-delay', `${100 + index * 50}`);
-                            });
-                        }
-                    };
-                    
-                    // 각 섹션에 애니메이션 적용
-                    ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'].forEach(addAnimationToSection);
-                    
-                    // 히어로 섹션 애니메이션
-                    const heroContent = document.querySelector('.hero-content');
-                    if (heroContent) {
-                        heroContent.setAttribute('data-aos', 'fade-up');
-                        heroContent.setAttribute('data-aos-duration', '1000');
+                        this.activeSection = sectionId;
                     }
+                },
+                initWebAnimations() {
+                    // 애니메이션 요소 초기화
+                    const expandingCircle = document.querySelector('.expanding-circle');
                     
-                    const heroDesc = document.querySelector('.hero-description');
-                    if (heroDesc) {
-                        heroDesc.setAttribute('data-aos', 'fade-up');
-                        heroDesc.setAttribute('data-aos-delay', '200');
-                    }
+                    document.addEventListener('click', (e) => {
+                        if (expandingCircle) {
+                            expandingCircle.style.left = `${e.clientX}px`;
+                            expandingCircle.style.top = `${e.clientY}px`;
+                            expandingCircle.style.transform = 'translate(-50%, -50%) scale(0)';
+                            expandingCircle.style.opacity = '0.95';
+                            
+                            setTimeout(() => {
+                                expandingCircle.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                                expandingCircle.style.transform = 'translate(-50%, -50%) scale(6)';
+                                expandingCircle.style.opacity = '0';
+                            }, 10);
+                        }
+                    });
+                },
+                
+                addDomElements() {
+                    // 문서 요소 초기화
+
+                    // 버튼 효과 요소 추가
+                    const btnWave = document.createElement('div');
+                    btnWave.classList.add('btn-wave');
                     
                     const heroBtn = document.querySelector('.hero .btn');
                     if (heroBtn) {
-                        heroBtn.setAttribute('data-aos', 'fade-up');
-                        heroBtn.setAttribute('data-aos-delay', '400');
+                        heroBtn.appendChild(btnWave);
                     }
                 },
-                scrollToTop() {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                initParallax() {
+                    // 패럴랙스 효과 초기화
+                    if (this.$refs.parallaxBg) {
+                        const parallaxBg = this.$refs.parallaxBg;
+                        const scrollPos = window.scrollY;
+                        const translateY = scrollPos * 0.3;
+                        parallaxBg.style.transform = `translateY(${translateY}px)`;
+                    }
                 },
-                scrollToSection(sectionId, offset = 80) {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        const sectionTop = section.getBoundingClientRect().top + window.scrollY - offset;
-                        window.scrollTo({
-                            top: sectionTop,
-                            behavior: 'smooth'
-                        });
+                startTypingEffect() {
+                    // 타이핑 효과 초기화
+                    if (this.$refs.typing) {
+                        this.startTyping();
                     }
                 }
             },
             mounted() {
                 console.log('Vue 인스턴스가 생성되었습니다.');
                 
-                // 애니메이션 초기화
-                this.initAnimations();
+                this.initWebAnimations();
+                this.addDomElements();
                 
-                // AOS 초기화 (경력 섹션에서는 애니메이션 사용 안함)
-                // AOS 초기화 (모든 섹션에 애니메이션 적용)
-                AOS.init({
-                    duration: 800,
-                    easing: 'ease-in-out',
-                    once: true
-                });
-                
-                // 스크롤 이벤트 리스너
-                window.addEventListener('scroll', this.handleScroll);
-                window.addEventListener('scroll', this.parallaxEffect);
-                
-                // 타이핑 효과
-                this.startTyping();
-                
-                // 모든 갤러리 이미지에 클릭 이벤트 추가
                 this.$nextTick(() => {
-                    const galleryImages = document.querySelectorAll('.gallery-img');
-                    galleryImages.forEach(img => {
-                        img.addEventListener('click', () => {
-                            this.openModal(img.src);
-                        });
-                        img.style.cursor = 'pointer'; // 포인터 커서 스타일 추가
-                    });
+                    // 초기화 이후 실행할 코드
+                    this.initParallax();
+                    this.startTypingEffect();
+                    window.addEventListener('scroll', this.handleScroll);
+                    this.handleScroll(); // 초기 로드 시 스크롤 상태 확인
                 });
             },
             beforeDestroy() {
-                // 이벤트 리스너 제거
                 window.removeEventListener('scroll', this.handleScroll);
-                window.removeEventListener('scroll', this.parallaxEffect);
             }
         });
     </script>
