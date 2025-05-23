@@ -5,38 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>엄신우 - 초기 설계부터 운영까지 경험한 4년차 Node.js 백엔드 개발자</title>
     <link rel="icon" href="assets/favicon.ico">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollToPlugin.min.js"></script>
-</head>
-<body style="padding-top: 60px;">
+
+    <link rel="preload" href="style.css" as="style">
+
+    <link rel="preload" href="assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/company_logos/certilife.webp" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/company_logos/musit.webp" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/icons/arrow-right.svg" as="image">
+    <link rel="preload" href="assets/icons/arrow-up.svg" as="image">
+    <link rel="preload" href="assets/icons/github.svg" as="image">
+    <link rel="preload" href="assets/icons/email.svg" as="image">
     
+    <link rel="prefetch" href="assets/portfolios/certilife/hospital_01.webp">
+    <link rel="prefetch" href="assets/portfolios/certilife/hospital_02.webp">
+    <link rel="prefetch" href="assets/portfolios/certilife/manufacturer_01.webp">
+    
+    <link rel="stylesheet" href="assets/fonts/pretendard.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="libs/vue.min.js"></script>
+    <script src="libs/gsap.min.js"></script>
+</head>
+<body>
     <div id="app">
-        <header :class="{ 'scrolled': headerScrolled }">
+        <header :class="{ 'scrolled': headerScrolled }" role="banner">
             <div class="container">
                 <div class="header-content">
-                    <div class="logo" style="pointer-events: none;">엄신우</div>
-                    <nav class="header-nav">
+                    <div class="logo">엄신우</div>
+                    <nav class="header-nav" role="navigation" aria-label="주요 메뉴">
                         <ul>
-                            <li><a href="#" @click.prevent="scrollToTop" :class="{ 'active': activeSection === 'home' }">프로필</a></li>
-                            <li><a href="#about" @click.prevent="scrollToSection('about')" :class="{ 'active': activeSection === 'about' }">소개</a></li>
-                            <li><a href="#experience" @click.prevent="scrollToSection('experience')" :class="{ 'active': activeSection === 'experience' }">경력</a></li>
-                            <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')" :class="{ 'active': activeSection === 'portfolio' }">포트폴리오</a></li>
-                            <li><a href="#skills" @click.prevent="scrollToSection('skills')" :class="{ 'active': activeSection === 'skills' }">기술 스택</a></li>
-                            <li><a href="#education" @click.prevent="scrollToSection('education')" :class="{ 'active': activeSection === 'education' }">학력</a></li>
-                            <li><a href="#contact" @click.prevent="scrollToSection('contact')" :class="{ 'active': activeSection === 'contact' }">연락처</a></li>
+                            <li><a href="#" @click.prevent="scrollToTop" :class="{ 'active': activeSection === 'home' }" aria-label="프로필 섹션으로 이동">프로필</a></li>
+                            <li><a href="#about" @click.prevent="scrollToSection('about')" :class="{ 'active': activeSection === 'about' }" aria-label="소개 섹션으로 이동">소개</a></li>
+                            <li><a href="#experience" @click.prevent="scrollToSection('experience')" :class="{ 'active': activeSection === 'experience' }" aria-label="경력 섹션으로 이동">경력</a></li>
+                            <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')" :class="{ 'active': activeSection === 'portfolio' }" aria-label="포트폴리오 섹션으로 이동">포트폴리오</a></li>
+                            <li><a href="#skills" @click.prevent="scrollToSection('skills')" :class="{ 'active': activeSection === 'skills' }" aria-label="기술 스택 섹션으로 이동">기술 스택</a></li>
+                            <li><a href="#education" @click.prevent="scrollToSection('education')" :class="{ 'active': activeSection === 'education' }" aria-label="학력 섹션으로 이동">학력</a></li>
+                            <li><a href="#contact" @click.prevent="scrollToSection('contact')" :class="{ 'active': activeSection === 'contact' }" aria-label="연락처 섹션으로 이동">연락처</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
-            <div class="progress-container">
+            <div class="progress-container" role="progressbar" aria-label="페이지 스크롤 진행률">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
         </header>
-        <section class="hero">
+        <main>
+        <section class="hero" aria-label="메인 소개">
             <div class="parallax-bg" ref="parallaxBg"></div>
             <div class="container">
                 <div class="hero-content">
@@ -45,10 +59,10 @@
                     <p class="hero-description">
                         <span v-for="(paragraph, index) in heroSection.description" :key="index">{{ paragraph }}</span>
                     </p>
-                    <a href="#contact" class="btn" @click.prevent="contactButtonEffect">
+                    <a href="#contact" class="btn" @click.prevent="contactButtonEffect" aria-label="연락처로 이동">
                         <div class="btn-text">
                             {{ heroSection.contactButtonText }}
-                            <img src="assets/icons/arrow-right.svg" class="btn-icon" alt="arrow right" width="16" height="16">
+                            <img src="assets/icons/arrow-right.svg" class="btn-icon" alt="" role="presentation" width="16" height="16">
                         </div>
                     </a>
                 </div>
@@ -56,9 +70,9 @@
         </section>
 
         <!-- 소개 섹션 -->
-        <section id="about">
+        <section id="about" aria-labelledby="about-title">
             <div class="container">
-                <h2 class="section-title">{{ aboutSection.title }}</h2>
+                <h2 class="section-title" id="about-title">{{ aboutSection.title }}</h2>
                 <p class="section-subtitle">{{ aboutSection.subtitle }}</p>
                 
                 <div class="about-content">
@@ -67,15 +81,17 @@
             </div>
         </section>
 
-        <section id="experience">
+        <section id="experience" aria-labelledby="experience-title">
             <div class="container">
-                <h2 class="section-title">{{ experienceSection.title }}</h2>
+                <h2 class="section-title" id="experience-title">{{ experienceSection.title }}</h2>
                 <p class="section-subtitle">{{ experienceSection.subtitle }}</p>
                 
-                <div class="exp-list">
-                    <div class="exp-card" v-for="(company, index) in experienceSection.companies" :key="index">
+                <div class="exp-list" role="list">
+                    <article class="exp-card" v-for="(company, index) in experienceSection.companies" :key="index" role="listitem">
                         <div class="exp-header">
-                            <div class="exp-logo"><img :src="company.logoSrc" :alt="company.name"></div>
+                            <div class="exp-logo">
+                                <img :src="company.logoSrc" :alt="company.name + ' 회사 로고'">
+                            </div>
                             <div>
                                 <div class="exp-company">{{ company.name }}</div>
                                 <div class="exp-duration">{{ company.duration }}</div>
@@ -107,13 +123,13 @@
                                 </ul>
                             </li>
                         </ul>
-                    </div>
+                    </article>
                 </div>
             </div>
         </section>
-        <section id="portfolio">
+        <section id="portfolio" aria-labelledby="portfolio-title">
             <div class="container">
-                <h2 class="section-title">{{ portfolioSection.title }}</h2>
+                <h2 class="section-title" id="portfolio-title">{{ portfolioSection.title }}</h2>
                 <p class="section-subtitle">{{ portfolioSection.subtitle }}</p>
                 <div class="portfolio-item" 
                      v-for="(project, index) in portfolioSection.projects" 
@@ -149,17 +165,17 @@
                         <template v-if="project.categories && project.categories.length > 0">
                             <div class="category-section" v-for="(category, catIndex) in project.categories" :key="'cat-'+catIndex">
                                 <div class="category-label">{{ category.name }}</div>
-                                <div class="gallery-grid" :class="{ 'single': category.images.length === 1 }">
+                                <div class="gallery-grid" :class="{ 'single': category.images.length === 1 }" role="group" :aria-label="category.name + ' 이미지 갤러리'">
                                     <div class="gallery-item" v-for="(image, imgIndex) in category.images" :key="'img-'+imgIndex">
-                                        <img :src="image.src" :alt="image.alt" class="gallery-img" @click="openModal(image.src)">
+                                        <img :src="image.src" :alt="image.alt" class="gallery-img" loading="lazy" @click="openModal(image.src)" role="button" :aria-label="image.alt + ' 확대하기'" tabindex="0" @keydown.enter="openModal(image.src)" @keydown.space="openModal(image.src)">
                                     </div>
                                 </div>
                             </div>
                         </template>
                         <template v-else>
-                            <div class="gallery-grid" :class="{ 'single': project.images.length === 1 }">
+                            <div class="gallery-grid" :class="{ 'single': project.images.length === 1 }" role="group" aria-label="프로젝트 이미지 갤러리">
                                 <div class="gallery-item" v-for="(image, imgIndex) in project.images" :key="'img-'+imgIndex">
-                                    <img :src="image.src" :alt="image.alt" class="gallery-img" @click="openModal(image.src)">
+                                    <img :src="image.src" :alt="image.alt" class="gallery-img" loading="lazy" @click="openModal(image.src)" role="button" :aria-label="image.alt + ' 확대하기'" tabindex="0" @keydown.enter="openModal(image.src)" @keydown.space="openModal(image.src)">
                                 </div>
                             </div>
                         </template>
@@ -167,9 +183,9 @@
                 </div>
             </div>
         </section>
-        <section id="skills">
+        <section id="skills" aria-labelledby="skills-title">
             <div class="container">
-                <h2 class="section-title">{{ skillsSection.title }}</h2>
+                <h2 class="section-title" id="skills-title">{{ skillsSection.title }}</h2>
                 <p class="section-subtitle">{{ skillsSection.subtitle }}</p>
                 
                 <div class="skill-grid">
@@ -179,16 +195,16 @@
                         <div class="skill-name">{{ category.name }}</div>
                         <ul class="skill-list">
                             <li class="skill-item" v-for="(skill, skillIndex) in category.skills" :key="skillIndex">
-                                <span class="skill-dot"></span>{{ skill }}
+                                <span class="skill-dot" aria-hidden="true"></span>{{ skill }}
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
-        <section id="education">
+        <section id="education" aria-labelledby="education-title">
             <div class="container">
-                <h2 class="section-title">{{ educationSection.title }}</h2>           
+                <h2 class="section-title" id="education-title">{{ educationSection.title }}</h2>           
                 <div class="skill-grid">
                     <div class="skill-card" 
                          v-for="(category, index) in educationSection.categories" 
@@ -208,29 +224,30 @@
                 </div>
             </div>
         </section>
-        <section id="contact">
+        <section id="contact" aria-labelledby="contact-title">
             <div class="container">
-                <h2 class="section-title">{{ contactSection.title }}</h2>
+                <h2 class="section-title" id="contact-title">{{ contactSection.title }}</h2>
                 <p class="section-subtitle">{{ contactSection.subtitle }}</p>
                 <div class="skill-grid">
                     <div class="skill-card" 
                          v-for="(item, index) in contactSection.items" 
                          :key="index">
                         <div class="skill-name">{{ item.name }}</div>
-                        <p><a :href="item.url" :target="item.external ? '_blank' : null" class="contact-link">{{ item.display }}</a></p>
+                        <p><a :href="item.url" :target="item.external ? '_blank' : null" class="contact-link" :aria-label="item.name + ': ' + item.display">{{ item.display }}</a></p>
                     </div>
                 </div>
             </div>
         </section>
-        <div class="image-modal" v-if="isModalVisible" @click="closeModal">
+        <div class="image-modal" v-if="isModalVisible" @click="closeModal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
             <div class="modal-content" @click.stop>
-                <img :src="modalImage" alt="확대된 이미지" class="modal-image" @click="openImageInNewTab">
-                <button class="modal-close" @click="closeModal">&times;</button>
+                <img :src="modalImage" alt="확대된 이미지" class="modal-image" loading="lazy" @click="openImageInNewTab" id="modal-title">
+                <button class="modal-close" @click="closeModal" aria-label="모달 닫기">&times;</button>
+                <div id="modal-description" class="sr-only">이미지를 클릭하면 새 탭에서 원본 크기로 볼 수 있습니다. ESC 키를 눌러 모달을 닫을 수 있습니다.</div>
             </div>
         </div>
-        <div class="scroll-top-btn" :class="{ 'visible': scrolled }" @click="scrollToTop">
-            <img src="assets/icons/arrow-up.svg" alt="위로 스크롤" width="24" height="24">
-        </div>
+        <button class="scroll-top-btn" :class="{ 'visible': scrolled }" @click="scrollToTop" aria-label="페이지 상단으로 스크롤">
+            <img src="assets/icons/arrow-up.svg" alt="" role="presentation" width="24" height="24">
+        </button>
         <footer class="footer">
             <div class="container">
                 <div class="footer-content">
@@ -245,18 +262,12 @@
                             <a href="mailto:dfassf@naver.com" class="social-icon">
                                 <img src="assets/icons/email.svg" alt="Email" width="20" height="20">
                             </a>
-                            <!-- <a href="https://gainful-tarn-9ef.notion.site/962545f9df544085a62a17f4056197da" target="_blank" class="social-icon">
-                                <img src="assets/icons/notion.svg" alt="Notion" width="20" height="20">
-                            </a> -->
                         </div>
                     </div>
-                    <!-- <div class="footer-bottom">
-                        <p class="copyright">© 2025 엄신우. All rights reserved.</p>
-                        <p class="powered-by">Powered by <a href="https://github.com/dfassf" target="_blank">Shinwoo Um</a></p>
-                    </div> -->
                 </div>
             </div>
         </footer>
+        </main>
     </div>
     <script>
         const app = new Vue({
@@ -272,6 +283,11 @@
                 activeSection: 'home',
                 scrollY: 0,
                 sectionOffsets: {},
+                ticking: false,
+                rippleElement: null,
+                expandingCircle: null,
+                sectionObserver: null,
+                sections: [],
                 contents: {
                     hero: {
                         tag: '백엔드 개발자',
@@ -411,22 +427,22 @@
                                     {
                                         name: '인증서 발행 및 설정',
                                         images: [
-                                            { src: 'assets/portfolios/certilife/hospital_01.png', alt: '인증서 발행 및 설정 1' },
-                                            { src: 'assets/portfolios/certilife/hospital_02.png', alt: '인증서 발행 및 설정 2' },
-                                            { src: 'assets/portfolios/certilife/hospital_03.png', alt: '인증서 발행 및 설정 3' }
+                                            { src: 'assets/portfolios/certilife/hospital_01.webp', alt: '인증서 발행 및 설정 1' },
+                                            { src: 'assets/portfolios/certilife/hospital_02.webp', alt: '인증서 발행 및 설정 2' },
+                                            { src: 'assets/portfolios/certilife/hospital_03.webp', alt: '인증서 발행 및 설정 3' }
                                         ]
                                     },
                                     {
                                         name: '시술동의서 및 계약서',
                                         images: [
-                                            { src: 'assets/portfolios/certilife/hospital_04.png', alt: '시술동의서' },
-                                            { src: 'assets/portfolios/certilife/hospital_05.png', alt: '근로계약서' }
+                                            { src: 'assets/portfolios/certilife/hospital_04.webp', alt: '시술동의서' },
+                                            { src: 'assets/portfolios/certilife/hospital_05.webp', alt: '근로계약서' }
                                         ]
                                     },
                                     {
                                         name: 'QR로그인 및 앱 다운로드',
                                         images: [
-                                            { src: 'assets/portfolios/certilife/hospital_06.png', alt: 'QR로그인' }
+                                            { src: 'assets/portfolios/certilife/hospital_06.webp', alt: 'QR로그인' }
                                         ]
                                     }
                                 ]
@@ -447,14 +463,14 @@
                                     {
                                         name: '전자계약',
                                         images: [
-                                            { src: 'assets/portfolios/certilife/manufacturer_01.png', alt: '전자계약' }
+                                            { src: 'assets/portfolios/certilife/manufacturer_01.webp', alt: '전자계약' }
                                         ]
                                     },
                                     {
                                         name: '이벤트 대시보드',
                                         images: [
-                                            { src: 'assets/portfolios/certilife/manufacturer_02.png', alt: '이벤트 대시보드 1' },
-                                            { src: 'assets/portfolios/certilife/manufacturer_03.png', alt: '이벤트 대시보드 2' }
+                                            { src: 'assets/portfolios/certilife/manufacturer_02.webp', alt: '이벤트 대시보드 1' },
+                                            { src: 'assets/portfolios/certilife/manufacturer_03.webp', alt: '이벤트 대시보드 2' }
                                         ]
                                     }
                                 ]
@@ -470,8 +486,8 @@
                                 technologies: ['Vue.js', 'Kakao SDK'],
                                 galleryTitle: '서비스 스크린샷',
                                 images: [
-                                    { src: 'assets/portfolios/certilife/mobile_01.png', alt: '인증서 수신화면 1' },
-                                    { src: 'assets/portfolios/certilife/mobile_02.png', alt: '인증서 수신화면 2' }
+                                    { src: 'assets/portfolios/certilife/mobile_01.webp', alt: '인증서 수신화면 1' },
+                                    { src: 'assets/portfolios/certilife/mobile_02.webp', alt: '인증서 수신화면 2' }
                                 ]
                             },
                             {
@@ -486,9 +502,9 @@
                                 technologies: ['Vue.js', 'NestJS', 'Kakao SDK'],
                                 galleryTitle: '서비스 스크린샷',
                                 images: [
-                                    { src: 'assets/portfolios/certilife/customer_01.png', alt: '환자용 웹페이지 1' },
-                                    { src: 'assets/portfolios/certilife/customer_02.png', alt: '환자용 웹페이지 2' },
-                                    { src: 'assets/portfolios/certilife/customer_03.png', alt: '환자용 웹페이지 3' }
+                                    { src: 'assets/portfolios/certilife/customer_01.webp', alt: '환자용 웹페이지 1' },
+                                    { src: 'assets/portfolios/certilife/customer_02.webp', alt: '환자용 웹페이지 2' },
+                                    { src: 'assets/portfolios/certilife/customer_03.webp', alt: '환자용 웹페이지 3' }
                                 ]
                             },
                             {
@@ -508,22 +524,22 @@
                                     {
                                         name: '메인 페이지',
                                         images: [
-                                            { src: 'assets/portfolios/musit/web_01.png', alt: '메인 페이지 1' },
-                                            { src: 'assets/portfolios/musit/web_02.png', alt: '메인 페이지 2' }
+                                            { src: 'assets/portfolios/musit/web_01.webp', alt: '메인 페이지 1' },
+                                            { src: 'assets/portfolios/musit/web_02.webp', alt: '메인 페이지 2' }
                                         ]
                                     },
                                     {
                                         name: 'NFT 마켓',
                                         images: [
-                                            { src: 'assets/portfolios/musit/web_03.png', alt: 'NFT 마켓 1' },
-                                            { src: 'assets/portfolios/musit/web_04.png', alt: 'NFT 마켓 2' },
-                                            { src: 'assets/portfolios/musit/web_05.png', alt: 'NFT 마켓 3' }
+                                            { src: 'assets/portfolios/musit/web_03.webp', alt: 'NFT 마켓 1' },
+                                            { src: 'assets/portfolios/musit/web_04.webp', alt: 'NFT 마켓 2' },
+                                            { src: 'assets/portfolios/musit/web_05.webp', alt: 'NFT 마켓 3' }
                                         ]
                                     },
                                     {
                                         name: '사용자 프로필',
                                         images: [
-                                            { src: 'assets/portfolios/musit/web_06.png', alt: '사용자 프로필' }
+                                            { src: 'assets/portfolios/musit/web_06.webp', alt: '사용자 프로필' }
                                         ]
                                     }
                                 ]
@@ -547,22 +563,22 @@
                                     {
                                         name: '메인 화면',
                                         images: [
-                                            { src: 'assets/portfolios/musit/app_01.png', alt: '메인 화면 1' },
-                                            { src: 'assets/portfolios/musit/app_02.png', alt: '메인 화면 2' },
-                                            { src: 'assets/portfolios/musit/app_03.png', alt: '메인 화면 3' }
+                                            { src: 'assets/portfolios/musit/app_01.webp', alt: '메인 화면 1' },
+                                            { src: 'assets/portfolios/musit/app_02.webp', alt: '메인 화면 2' },
+                                            { src: 'assets/portfolios/musit/app_03.webp', alt: '메인 화면 3' }
                                         ]
                                     },
                                     {
                                         name: '플레이어 및 컬렉션',
                                         images: [
-                                            { src: 'assets/portfolios/musit/app_04.png', alt: '음악 플레이어' },
-                                            { src: 'assets/portfolios/musit/app_05.png', alt: 'NFT 컬렉션' }
+                                            { src: 'assets/portfolios/musit/app_04.webp', alt: '음악 플레이어' },
+                                            { src: 'assets/portfolios/musit/app_05.webp', alt: 'NFT 컬렉션' }
                                         ]
                                     },
                                     {
                                         name: '프로필 및 설정',
                                         images: [
-                                            { src: 'assets/portfolios/musit/app_06.png', alt: '프로필 화면' }
+                                            { src: 'assets/portfolios/musit/app_06.webp', alt: '프로필 화면' }
                                         ]
                                     }
                                 ]
@@ -672,13 +688,7 @@
                                 url: 'https://github.com/dfassf',
                                 display: 'https://github.com/dfassf',
                                 external: true
-                            },
-                            // {
-                            //     name: 'Notion',
-                            //     url: 'https://gainful-tarn-9ef.notion.site/962545f9df544085a62a17f4056197da',
-                            //     display: 'Link',
-                            //     external: true
-                            // }
+                            }
                         ]
                     }
                 }
@@ -711,10 +721,20 @@
                     this.modalImage = imageSrc;
                     this.isModalVisible = true;
                     document.body.style.overflow = 'hidden';
+                    // 포커스 관리
+                    this.$nextTick(() => {
+                        const modalClose = document.querySelector('.modal-close');
+                        if (modalClose) modalClose.focus();
+                    });
                 },
                 closeModal() {
                     this.isModalVisible = false;
                     document.body.style.overflow = '';
+                },
+                handleKeyDown(event) {
+                    if (event.key === 'Escape' && this.isModalVisible) {
+                        this.closeModal();
+                    }
                 },
                 openImageInNewTab() {
                     window.open(this.modalImage, '_blank');
@@ -726,26 +746,34 @@
                     const x = event.clientX - btnRect.left;
                     const y = event.clientY - btnRect.top;
                     
-                    const ripple = document.createElement('div');
-                    ripple.style.position = 'absolute';
-                    ripple.style.width = '5px';
-                    ripple.style.height = '5px';
-                    ripple.style.background = 'rgba(255, 255, 255, 0.7)';
-                    ripple.style.borderRadius = '50%';
-                    ripple.style.transformOrigin = 'center';
-                    ripple.style.left = `${x}px`;
-                    ripple.style.top = `${y}px`;
-                    ripple.style.pointerEvents = 'none';
-                    btn.appendChild(ripple);
+                    // 기존 ripple 요소 재사용 또는 생성
+                    if (!this.rippleElement) {
+                        this.rippleElement = document.createElement('div');
+                        this.rippleElement.style.position = 'absolute';
+                        this.rippleElement.style.background = 'rgba(255, 255, 255, 0.7)';
+                        this.rippleElement.style.borderRadius = '50%';
+                        this.rippleElement.style.transformOrigin = 'center';
+                        this.rippleElement.style.pointerEvents = 'none';
+                    }
                     
-                    gsap.to(ripple, {
+                    // ripple 위치 업데이트
+                    this.rippleElement.style.width = '5px';
+                    this.rippleElement.style.height = '5px';
+                    this.rippleElement.style.left = `${x}px`;
+                    this.rippleElement.style.top = `${y}px`;
+                    this.rippleElement.style.opacity = '1';
+                    this.rippleElement.style.transform = 'scale(1)';
+                    
+                    // 부모 요소에 추가 (이미 추가되어 있지 않은 경우)
+                    if (!this.rippleElement.parentElement) {
+                        btn.appendChild(this.rippleElement);
+                    }
+                    
+                    gsap.to(this.rippleElement, {
                         scale: 25,
                         opacity: 0,
                         duration: 0.6,
-                        ease: 'power1.out',
-                        onComplete: () => {
-                            ripple.remove();
-                        }
+                        ease: 'power1.out'
                     });
                     
                     gsap.timeline()
@@ -781,19 +809,24 @@
                             ease: 'power2.out'
                         });
                     
-                    const circle = document.createElement('div');
-                    circle.className = 'expanding-circle';
-                    document.body.appendChild(circle);
+                    // 기존 expandingCircle 요소 재사용 또는 생성
+                    if (!this.expandingCircle) {
+                        this.expandingCircle = document.createElement('div');
+                        this.expandingCircle.className = 'expanding-circle';
+                        document.body.appendChild(this.expandingCircle);
+                    }
                     
-                    circle.style.top = `${event.clientY}px`;
-                    circle.style.left = `${event.clientX}px`;
+                    this.expandingCircle.style.top = `${event.clientY}px`;
+                    this.expandingCircle.style.left = `${event.clientX}px`;
+                    this.expandingCircle.style.transform = 'translate(-50%, -50%) scale(0)';
+                    this.expandingCircle.style.opacity = '0.95';
                     
                     const maxDim = Math.max(window.innerWidth, window.innerHeight);
                     const scale = maxDim * 3 / 60;
                     
                     const contactSection = document.getElementById('contact');
                     
-                    gsap.to(circle, {
+                    gsap.to(this.expandingCircle, {
                         scale: scale,
                         opacity: 1,
                         duration: 0.35,
@@ -813,13 +846,10 @@
                                 });
                                 
                                 setTimeout(() => {
-                                    gsap.to(circle, {
+                                    gsap.to(this.expandingCircle, {
                                         opacity: 0,
                                         duration: 0.4,
-                                        ease: 'power2.out',
-                                        onComplete: () => {
-                                            circle.remove();
-                                        }
+                                        ease: 'power2.out'
                                     });
                                     
                                     cards.forEach((card, index) => {
@@ -848,31 +878,34 @@
                     
                     // 스크롤 진행률 계산 및 표시
                     const scrollProgress = (scrollTop / (scrollHeight - clientHeight)) * 100;
-                    this.scrollProgress = scrollProgress;
                     
                     const progressBar = document.querySelector('.progress-bar');
                     if (progressBar) {
-                        progressBar.style.width = `${scrollProgress}%`;
+                        // transform 속성 사용으로 리페인트 최소화
+                        progressBar.style.transform = `translateX(${scrollProgress - 100}%)`;
+                        progressBar.style.width = '100%';
                     }
                     
-                    // 현재 보이는 섹션 감지
-                    this.detectVisibleSection();
+                    // 백업 섹션 감지 (인터섹션 옵저버와 함께 사용)
+                    if (window.scrollY < 100) {
+                        this.detectVisibleSection();
+                    }
                     
-                    // 패럴랙스 효과
+                    // 패럴랙스 효과 최적화
                     if (this.$refs.parallaxBg) {
                         const parallaxBg = this.$refs.parallaxBg;
-                        const translateY = scrollTop * 0.3;
+                        const translateY = window.scrollY * 0.3;
                         parallaxBg.style.transform = `translateY(${translateY}px)`;
                     }
                 },
                 detectVisibleSection() {
-                    const sections = ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'];
-                    const offset = 150;
-                    
                     if (window.scrollY < 100) {
                         this.activeSection = 'home';
                         return;
                     }
+                    
+                    const sections = ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'];
+                    const offset = 150;
                     
                     for (let i = sections.length - 1; i >= 0; i--) {
                         const section = document.getElementById(sections[i]);
@@ -885,14 +918,15 @@
                         }
                     }
                 },
-                parallaxEffect() {
+                initParallax() {
                     if (this.$refs.parallaxBg) {
+                        const parallaxBg = this.$refs.parallaxBg;
                         const scrollPos = window.scrollY;
                         const translateY = scrollPos * 0.3;
-                        this.$refs.parallaxBg.style.transform = `translateY(${translateY}px)`;
+                        parallaxBg.style.transform = `translateY(${translateY}px)`;
                     }
                 },
-                startTyping() {
+                startTypingEffect() {
                     if (this.$refs.typing) {
                         this.isTyping = true;
                         const text = this.typingText;
@@ -910,6 +944,26 @@
                         
                         setTimeout(typeText, 500);
                     }
+                },
+                throttledScroll() {
+                    if (!this.ticking) {
+                        window.requestAnimationFrame(() => {
+                            this.handleScroll();
+                            this.ticking = false;
+                        });
+                        this.ticking = true;
+                    }
+                },
+                debounce(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
                 },
                 scrollToTop() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -934,70 +988,81 @@
                         this.activeSection = sectionId;
                     }
                 },
-                initWebAnimations() {
-                    // 애니메이션 요소 초기화
-                    const expandingCircle = document.querySelector('.expanding-circle');
+                setupSectionObserver() {
+                    const options = {
+                        root: null,
+                        rootMargin: '-80px 0px -50% 0px',
+                        threshold: 0.01
+                    };
                     
-                    document.addEventListener('click', (e) => {
-                        if (expandingCircle) {
-                            expandingCircle.style.left = `${e.clientX}px`;
-                            expandingCircle.style.top = `${e.clientY}px`;
-                            expandingCircle.style.transform = 'translate(-50%, -50%) scale(0)';
-                            expandingCircle.style.opacity = '0.95';
+                    this.sectionObserver = new IntersectionObserver((entries) => {
+                        let visibleSections = [];
+                        
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                visibleSections.push({
+                                    id: entry.target.id,
+                                    ratio: entry.intersectionRatio,
+                                    top: entry.boundingClientRect.top
+                                });
+                            }
+                        });
+                        
+                        // 가장 많이 보이는 섹션을 선택
+                        if (visibleSections.length > 0) {
+                            visibleSections.sort((a, b) => {
+                                // 상단에 가까운 섹션을 우선으로 정렬
+                                return Math.abs(a.top) - Math.abs(b.top);
+                            });
                             
-                            setTimeout(() => {
-                                expandingCircle.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-                                expandingCircle.style.transform = 'translate(-50%, -50%) scale(6)';
-                                expandingCircle.style.opacity = '0';
-                            }, 10);
+                            this.activeSection = visibleSections[0].id;
+                        }
+                    }, options);
+                    
+                    // 모든 섹션에 observer 연결
+                    this.sections = ['about', 'experience', 'portfolio', 'skills', 'education', 'contact'];
+                    this.sections.forEach(sectionId => {
+                        const section = document.getElementById(sectionId);
+                        if (section) {
+                            this.sectionObserver.observe(section);
                         }
                     });
-                },
-                
-                addDomElements() {
-                    // 문서 요소 초기화
-
-                    // 버튼 효과 요소 추가
-                    const btnWave = document.createElement('div');
-                    btnWave.classList.add('btn-wave');
-                    
-                    const heroBtn = document.querySelector('.hero .btn');
-                    if (heroBtn) {
-                        heroBtn.appendChild(btnWave);
-                    }
-                },
-                initParallax() {
-                    // 패럴랙스 효과 초기화
-                    if (this.$refs.parallaxBg) {
-                        const parallaxBg = this.$refs.parallaxBg;
-                        const scrollPos = window.scrollY;
-                        const translateY = scrollPos * 0.3;
-                        parallaxBg.style.transform = `translateY(${translateY}px)`;
-                    }
-                },
-                startTypingEffect() {
-                    // 타이핑 효과 초기화
-                    if (this.$refs.typing) {
-                        this.startTyping();
-                    }
                 }
             },
             mounted() {
-                console.log('Vue 인스턴스가 생성되었습니다.');
-                
-                this.initWebAnimations();
-                this.addDomElements();
+                this.setupSectionObserver();
                 
                 this.$nextTick(() => {
-                    // 초기화 이후 실행할 코드
                     this.initParallax();
                     this.startTypingEffect();
-                    window.addEventListener('scroll', this.handleScroll);
-                    this.handleScroll(); // 초기 로드 시 스크롤 상태 확인
+                    
+                    window.addEventListener('scroll', this.throttledScroll);
+                    window.addEventListener('keydown', this.handleKeyDown);
+                    this.handleScroll();
+                    
+                    // 리사이즈 이벤트 핸들러 최적화
+                    const optimizedResize = this.debounce(() => {
+                        this.handleScroll();
+                    }, 250);
+                    
+                    window.addEventListener('resize', optimizedResize);
                 });
             },
             beforeDestroy() {
-                window.removeEventListener('scroll', this.handleScroll);
+                window.removeEventListener('scroll', this.throttledScroll);
+                window.removeEventListener('resize', this.optimizedResize);
+                window.removeEventListener('keydown', this.handleKeyDown);
+                
+                // 인터섹션 옵저버 정리
+                if (this.sectionObserver) {
+                    this.sections.forEach(sectionId => {
+                        const section = document.getElementById(sectionId);
+                        if (section) {
+                            this.sectionObserver.unobserve(section);
+                        }
+                    });
+                    this.sectionObserver.disconnect();
+                }
             }
         });
     </script>
