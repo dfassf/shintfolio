@@ -35,7 +35,7 @@
                     <nav class="header-nav" role="navigation" aria-label="주요 메뉴">
                         <ul>
                             <li><a href="#" @click.prevent="scrollToTop" :class="{ 'active': activeSection === 'home' }" aria-label="프로필 섹션으로 이동">프로필</a></li>
-                            <li><a href="#about" @click.prevent="scrollToSection('about')" :class="{ 'active': activeSection === 'about' }" aria-label="소개 섹션으로 이동">소개</a></li>
+                            <!-- <li><a href="#about" @click.prevent="scrollToSection('about')" :class="{ 'active': activeSection === 'about' }" aria-label="소개 섹션으로 이동">소개</a></li> -->
                             <li><a href="#experience" @click.prevent="scrollToSection('experience')" :class="{ 'active': activeSection === 'experience' }" aria-label="경력 섹션으로 이동">경력</a></li>
                             <li><a href="#portfolio" @click.prevent="scrollToSection('portfolio')" :class="{ 'active': activeSection === 'portfolio' }" aria-label="포트폴리오 섹션으로 이동">포트폴리오</a></li>
                             <li><a href="#skills" @click.prevent="scrollToSection('skills')" :class="{ 'active': activeSection === 'skills' }" aria-label="기술 스택 섹션으로 이동">기술 스택</a></li>
@@ -70,7 +70,7 @@
         </section>
 
         <!-- 소개 섹션 -->
-        <section id="about" aria-labelledby="about-title">
+        <!-- <section id="about" aria-labelledby="about-title" v-if="aboutSection">
             <div class="container">
                 <h2 class="section-title" id="about-title">{{ aboutSection.title }}</h2>
                 <p class="section-subtitle">{{ aboutSection.subtitle }}</p>
@@ -79,7 +79,7 @@
                     <p v-for="(paragraph, index) in aboutSection.paragraphs" :key="index">{{ paragraph }}</p>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <section id="experience" aria-labelledby="experience-title">
             <div class="container">
@@ -292,23 +292,20 @@
                     hero: {
                         tag: '백엔드 개발자',
                         title: '기획/설계/운영 전 주기를 경험한',
-                        description: [
-                            '4년차 백엔드 중심의 풀스택 개발자로 NestJS 기반의 서버 아키텍처 설계와 도메인 모델링에 강점을 가지고 있습니다.',
-                            '인증서 발행량 40만건, 카카오톡 채널 친구 1만 9천명에 달하는 서비스의 초기 개발부터 운영, 리팩토링, 마이그레이션까지 전 주기 경험을 보유하고 있으며 기술 부채 해소와 구조적 개선을 통해 시스템 안정성과 비용 효율을 실질적으로 개선한 경험이 있습니다.',
-                            '도메인 요구사항을 빠르게 파악하고, 기획자 및 외부 서비스 담당자와의 긴밀한 협업을 통해 문제를 구체화하고 해결해나가는 데 익숙합니다.',
-                            '유지보수성과 생산성을 동시에 고려한 설계와 구현, 그리고 사용자 경험까지 아우르는 사고로 팀과 서비스에 기여해왔습니다.'
-                        ],
+                   description: [
+    '서비스 초기 설계부터 운영까지 경험한 4년차 Node.js 백엔드 개발자, 엄신우입니다.',
+    '의료 인증서 발행 서비스에서 초기 개발부터 운영, 리팩토링, 마이그레이션까지 참여하며 인증서 40만 건 발행, 카카오톡 채널 친구 1만 9천명 달성에 기여했습니다.',
+    '기획자 및 외부 담당자와 협업하며 전자계약 마이그레이션으로 연간 약 400만원 비용 절감, 근로계약서·시술동의서 기획과 개발에도 참여했습니다.',
+    '업무 효율성 개선에 주도적으로 참여하며, CS 모니터링 기능 추가, 프론트 Webpack → Vite, 백엔드 Express → NestJS 전환으로 생산성과 협업 효율을 향상시켰습니다.',
+],
                         contactButtonText: '연락하기'
                     },
-                    about: {
-                        title: '소개',
-                        subtitle: '백엔드 개발에 풀스택 경험을 활용해요.',
-                        paragraphs: [
-                            '프론트엔드 중심 풀스택 개발자로 커리어를 시작했지만 서티라이프에서 백엔드 설계 및 개발을 담당하게 되며 백엔드에 더 큰 전문성을 가지게 되었습니다. 약 2년간 의료 인증서 발행 서비스의 초기 개발부터 참여하여 40만 건 이상의 인증서 발행과 1만 9천 명 이상의 카카오 로그인 회원을 보유한 안정적인 서비스가 될 때까지 운영에 참여하였습니다.',
-                            'NestJS, MongoDB, TypeScript를 주력으로 사용하며, 클린 코드와 유지보수성 높은 아키텍처 설계에 중점을 둡니다. 프론트엔드 개발 경험을 통해 API 설계 시 화면단에서의 데이터 사용성과 효율성을 고려할 수 있는 것이 저의 강점입니다.',
-                            '기획자와 소통하며 기능의 사용성과 쓰임새에 대해 늘 고민하는 것이 습관화 되어있으며, 팀 내에서 기술적 의사결정과 문제 해결에 적극적으로 참여하는 개발자가 되고자 합니다.'
-                        ]
-                    },
+                    // about: {
+                    //     title: '소개',
+                    // subtitle: '백엔드 개발에 풀스택 경험을 활용해요.',
+                    //     paragraphs: [
+                    //     ]
+                    // },
                     experience: {
                         title: '경력',
                         subtitle: '실무에서의 역할과 문제 해결 경험을 소개해요.',
